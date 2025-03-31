@@ -11,8 +11,8 @@ const UserCard = ({ user }) => {
     className=" items-center gap-5 overflow-hidden border rounded-2xl shadow-md backdrop-blur-md bg-white/20 hover:shadow-lg transition duration-200">
       
       {/* Avatar */}
-      <div className="w-full h-[40%]">
-        <Avatar username={user.username} avatar_url={user.avatar} rounded={false} />
+      <div className="w-full h-[50%]">
+        <Avatar width="100%" height="100%" username={user.username} avatar_url={user.avatar} rounded={false} />
       </div>
 
       {/* User Info */}

@@ -119,6 +119,7 @@ export const getUserProjects = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
+    console.log("reached")
     const { username } = req.params;
 
     // Verify user is updating their own profile
@@ -127,12 +128,12 @@ export const updateUser = async (req, res) => {
     }
 
     // Handle file upload if there is a file
+    console.log("1");
     try {
       await handleProfilePicUpload(req, res);
     } catch (uploadError) {
       return res.status(400).json({ error: uploadError });
     }
-
     const { fullName, bio, new_username, country, visibility, skills } = req.body;
 
     // Validate required fields

@@ -44,8 +44,8 @@ const OpenProject = () => {
     </div>
 
     return (
-        <div className=' flex w-full bg-zinc-100 font-neue text-zinc-800'>
-        <div className='w-full px-20 pt-8 flex flex-col  gap-3  pb-40'>
+        <div className=' w-full  font-neue text-zinc-800'>
+        <div className='w-full px-20 pt-8 flex flex-col bg-zinc-100  gap-3 rounded-xl border-b  pb-40'>
             
             {/* header */}
             <div className='basics'>
@@ -121,7 +121,7 @@ const OpenProject = () => {
             </div>
 
             {/* static buttons */}
-            <div className="flex border-b  border-zinc-300 mb-7 gap-7 font-semibold">
+            <div className="flex border-b  border-zinc-300 mb-1 gap-7 font-semibold">
                 <button
                 // className='border-b-2 border-blue-500'
                 className={`${!showComments? "border-b-2 text-zinc-800 border-blue-600" : "text-zinc-600"}`}
@@ -145,12 +145,15 @@ const OpenProject = () => {
                 <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
             ):showComments?(
-              <CommentSection/>
+              <CommentSection projectId={project._id}/>
             ):(
               project && <ProjectOverview project={project} />
             )}            
 
 
+        </div>
+        <div className='w-full h-[20rem] bg-white'>
+          <h2 className='text-center w-full'>see more related projects</h2>
         </div>
 
         </div>

@@ -99,7 +99,7 @@ const AddProject = ({onClose}) => {
 
           console.log("project added successfully:", response.data);
           // setMediaFiles([]);
-          // onClose();
+          onClose();
         }catch(error){
 
           console.log(error);

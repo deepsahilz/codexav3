@@ -289,16 +289,18 @@ export const deleteProject = async (req, res) => {
 export const addComment = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const {projectId} = req.params;
+        const { projectId } = req.params;
         const { parentId, content, gifUrl } = req.body;
-        console.log("here it is--->",content);
-        console.log("here it is--->",userId);
-        console.log("here it is--->",projectId);
 
-        if (!userId || !projectId || (!content && !gifUrl)) {
+        if (!userId || !projectId) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+
+        if (!content && !gifUrl) {
             return res.status(400).json({ message: "Content or GIF is required." });
         }
 
+        // Create a new comment
         const newComment = new Comment({
             parentId: parentId || null,
             userId,
@@ -308,6 +310,8 @@ export const addComment = async (req, res) => {
         });
 
         await newComment.save();
+        
+        
 
         res.status(201).json({ message: "Comment added successfully", comment: newComment });
     } catch (error) {
@@ -315,37 +319,48 @@ export const addComment = async (req, res) => {
     }
 };
 
-export const getComments = async (req, res) => {
-    try {
-        const { projectId } = req.params;
+export const getParentComments = async (req, res) => {
+  try {
+      const { projectId } = req.params;
 
-        if (!projectId) {
-            return res.status(400).json({ message: "Project ID is required." });
-        }
+      if (!projectId) {
+          return res.status(400).json({ message: "Project ID is required." });
+      }
 
-        const comments = await Comment.find({ projectId })
-            .populate("userId", "username") // Adjust fields as needed
-            .populate("parentId") // If needed
-            .sort({ createdAt: -1 })
-            .lean(); // Converts to plain JavaScript objects
+      const comments = await Comment.find({ projectId , parentId: null})
+          .populate("userId", "username avatar") // Adjust fields as needed
+          // .populate("parentId") // If needed
+          .sort({ createdAt: -1 })
+          .lean(); // Converts to plain JavaScript objects
 
-        // Fetch likes for each comment
-        const commentIds = comments.map(comment => comment._id);
-        const likes = await CommentLike.aggregate([
-            { $match: { commentId: { $in: commentIds } } },
-            { $group: { _id: "$commentId", likeCount: { $sum: 1 } } }
-        ]);
+      // Fetch likes for each comment
+      const commentIds = comments.map(comment => comment._id);
+      const likes = await CommentLike.aggregate([
+          { $match: { commentId: { $in: commentIds } } },
+          { $group: { _id: "$commentId", likeCount: { $sum: 1 } } }
+      ]);
 
-        // Map likes to comments
-        const likeMap = new Map(likes.map(like => [like._id.toString(), like.likeCount]));
-        comments.forEach(comment => {
-            comment.likes = likeMap.get(comment._id.toString()) || 0;
-        });
+      // Map likes to comments
+      const likeMap = new Map(likes.map(like => [like._id.toString(), like.likeCount]));
+      comments.forEach(comment => {
+          comment.likes = likeMap.get(comment._id.toString()) || 0;
+      });
 
-        res.status(200).json(comments);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
+      // Flatten the userId object
+      const formattedComments = comments.map(comment => ({
+          ...comment,
+          username: comment.userId?.username || "Unknown", // Extract username
+          avatar: comment.userId?.avatar || null, // Extract avatar
+      }));
+
+      // Remove userId field since we don’t need it anymore
+      formattedComments.forEach(comment => delete comment.userId);
+
+      res.status(200).json(formattedComments);
+  } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+  }
 };
+
 
 

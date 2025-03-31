@@ -14,7 +14,6 @@ import AddProject from './components/AddProject'
 import bg1 from './assets/images/bg1.jpg'
 import ExplorePage from './components/ExplorePage'
 import ChatPage from './components/ChatPage'
-import OpenProjectCard from './components/OpenProjectCard'
 import SearchPage from './components/SearchPage'
 import OpenProject from './components/OpenProject'
 

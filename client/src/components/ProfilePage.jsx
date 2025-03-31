@@ -137,18 +137,9 @@ const ProfilePage = () => {
         <div className='bg-zinc-200 w-full px-20 py-10 flex items-start font-neue gap-20'>
              
             <div>
-                <div className='w-[10rem] h-[10rem] rounded-full overflow-hidden '>
-                {user&&(user.avatar?(
-                          <img
-                            src={`http://localhost:5000${userData.avatar}`}
-                            className="w-full h-full object-cover"
-                            
-                            alt="Profile"
-                          />):
-                      (<Avatar username={user.username} className="text-4xl"/>))}
-                </div>
-
-                <div>
+                
+                <Avatar username={user.username} avatar_url={user.avatar} width="10rem" height="10rem" className="text-4xl"/>
+                <div className='mt-5'>
                     <h1 className='font-semibold text-2xl text-zinc-800 mb-4'>@{userData.username||"loading"}</h1>
                     <h1 className='font-semibold text-5xl capitalize text-zinc-900 mb-4'>{userData.fullName||"loading"}</h1>
                     {/* action buttons */}

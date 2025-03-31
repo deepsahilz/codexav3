@@ -1,5 +1,5 @@
 import express from "express";
-import { createProject, getProject,getAllProjects, updateProject, deleteProject,likeProject,unlikeProject, addComment, getComments } from "../controllers/projectControllers.js";
+import { createProject, getProject,getAllProjects, updateProject, deleteProject,likeProject,unlikeProject, addComment, getParentComments } from "../controllers/projectControllers.js";
 import verifyToken from "../middlewares/authMiddleware.js";
 import projectFilesUpload from "../middlewares/projectFilesUpload.js";
 const router = express.Router();
@@ -19,7 +19,7 @@ router.delete("/:projectId/like", verifyToken,unlikeProject);
 
 
 //written here
-router.get("/:projectId/comment", verifyToken,getComments);
+router.get("/:projectId/comment", verifyToken,getParentComments);
 router.post("/:projectId/comment", verifyToken,addComment);
 
 

@@ -76,6 +76,7 @@ const ProjectCard = ({project,...props}) => {
 
             <div className=' transition-all flex justify-between w-full absolute left-4 pr-8 bottom-3 text-white'>
                 <div className='flex gap-3'>
+
                 <div className='flex items-end gap-[5px] justify-end'>
                     <button  onClick={toggleLike}>
                         {isLiked?(  
@@ -97,8 +98,9 @@ const ProjectCard = ({project,...props}) => {
                         )}
                     </button>
 
-                <div className='text-[12px] -mb-[2px]'>{likeCount}</div>
+                    <div className='text-[12px] -mb-[2px]'>{likeCount}</div>
                 </div>
+                
                 <div className='flex items-center gap-[5px] -mb-[2px]'>
                     <img className='w-[18px] h-[18px] invert ' src={comment_icon} /> 
                     <div className='text-[12px] -mb-[2px]'>24</div>

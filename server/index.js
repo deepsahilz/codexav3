@@ -16,7 +16,9 @@ import utilRoutes from "./src/routes/utilRoutes.js";
 import tagRoutes from "./src/routes/tagRoutes.js";
 import searchRoutes from "./src/routes/searchRoutes.js";
 import suggestRoutes from "./src/routes/suggestRoutes.js";
+import commentRoutes from "./src/routes/commentRoutes.js";
 import errorMiddleware from "./src/middlewares/errorMiddleware.js"
+
 
 
 
@@ -62,6 +64,7 @@ app.use("/api/search",searchRoutes);      //✅
 app.use("/api/suggest",suggestRoutes);    //✅
 
 app.use("/api/project", projectRoutes);     
+app.use("/api/comment", commentRoutes);     
 //GET    -->api/project                      ✔️ get all projects for home feed
 //POST   -->api/project                      ✔️ create a project
 //GET    -->api/project/:projectid           🚀 get a single project(with all data)

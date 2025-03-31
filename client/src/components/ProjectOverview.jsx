@@ -11,7 +11,7 @@ const ProjectOverview = ({project}) => {
 
                 <div>
                     <h4 className='font-semibold text-zinc-600 mb-1'>Core Features</h4>
-                    <ul class="list-disc pl-5 text-zinc-600">
+                    <ul className="list-disc pl-5 text-zinc-600">
                         <li>Utilizes ChatGPT's API to generate Ghibli-style artwork.</li>
                         <li>Implements text-to-image model integration for AI-driven visuals.</li>
                         <li>Supports fine-tuned prompt engineering for style accuracy.</li>

@@ -136,7 +136,7 @@ const EditProfile = () => {
                                 
                                 {preview ? (    
                                 <img src={preview} alt="Preview" className="w-full h-full  rounded-full object-cover" />
-                                ) : (<Avatar username={userData.username} avatar_url={userData.avatar} />)}
+                                ) : (<Avatar width="100%" height="100%" username={userData.username} avatar_url={userData.avatar} />)}
 
                                 </div>
                                 <button
