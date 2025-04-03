@@ -7,6 +7,11 @@ const axiosInstance = axios.create({
     headers: { "Content-Type": "application/json" },
 });
 
+const isAuthCheckRoute = () => {
+    const path = window.location.pathname;
+    return path === "/" || path === "/login" || path === "/signup";
+};
+
 axiosInstance.interceptors.request.use(
     async (config) => {
         if (!navigator.onLine) {
@@ -32,7 +37,12 @@ axiosInstance.interceptors.response.use(
     (error) => {
         console.log("bro error here--->",error);
         if (error.message === "No internet connection") return Promise.reject(error);
+    
         if (error.response) {
+            // Suppress toast only for /auth/me errors on specific pages
+            if (error.config?.url === "/api/auth/me" && isAuthCheckRoute()) {
+                return Promise.reject(error);
+            }
             toast.error(error.response.data?.message || "Something went wrong!");
         } else {
             toast.error("Server unreachable. Please try again later.");
