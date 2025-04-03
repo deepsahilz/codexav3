@@ -185,11 +185,13 @@ const Nav = () => {
                 </li>
               )}
 
+              {isLoggedIn &&
+              
               <li className="h-full flex items-center">
                 <div className="">
                   <SearchBar/>
                 </div>
-              </li>
+              </li>}
             </ul>
           </div>
 

@@ -40,7 +40,7 @@ function App() {
                 <Route path="/user/:username" element={<ProfilePage/>}/>
                 <Route path="/explore" element={<ExplorePage/>}/>                
                 <Route path="/bounties" element={<BountiesPage/>}/>                
-                <Route path="user/:username/edit" element={<Editprofile2/>}/>
+                <Route path="/user/:username/edit" element={<Editprofile2/>}/>
             </Route>
           
           </Route>
