@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const UserContext = createContext();
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -12,10 +13,7 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async() => {
         try {
-            const response = await axios.get("/api/auth/me",{
-              baseURL: "http://localhost:5000",
-              withCredentials: true,}
-              );
+            const response = await axiosInstance.get("/api/auth/me");
             console.log("From context",response.data)
             setUser(response.data);
             setIsLoggedIn(true);

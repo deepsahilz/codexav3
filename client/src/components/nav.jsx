@@ -151,7 +151,7 @@ const Nav = () => {
                 </li>
               )}
 
-              {isLoggedIn && (
+              {/* {isLoggedIn && (
                 <li className="h-full flex items-center">
                   <NavLink
                     to="/#"
@@ -161,7 +161,7 @@ const Nav = () => {
                     Communities
                   </NavLink>
                 </li>
-              )}
+              )} */}
 
               {!isLoggedIn && (
                 <li className="h-full flex items-center">
@@ -185,11 +185,13 @@ const Nav = () => {
                 </li>
               )}
 
+              {isLoggedIn &&
+              
               <li className="h-full flex items-center">
                 <div className="">
                   <SearchBar/>
                 </div>
-              </li>
+              </li>}
             </ul>
           </div>
 
