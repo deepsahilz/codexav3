@@ -3,7 +3,9 @@ import verifyToken from "../middlewares/authMiddleware.js";
 import User from "../models/UserModel.js";
 import Project from "../models/ProjectModel.js";
 import ProjectTag from "../models/ProjectTagModel.js";
+import Tag from "../models/TagModel.js";
 import Like from "../models/LikeModel.js";
+
 
 const router = express.Router();
 
@@ -35,45 +37,58 @@ router.get("/project", verifyToken, async (req, res) => {
     const { query } = req.query;
     if (!query) return res.status(400).json({ message: "query is required" });
 
-    const userId = req.user?.userId; // Get user ID from request
+    const userId = req.user?.userId;
 
-    // Find projects matching the search query
+    // 1. Find tags that match the query
+    const matchingTags = await Tag.find({
+      name: { $regex: query, $options: "i" }
+    });
+    const tagIds = matchingTags.map(tag => tag._id);
+
+    // 2. Get projectIds with those tags
+    const matchingProjectTags = await ProjectTag.find({
+      tagId: { $in: tagIds }
+    });
+    const projectIdsFromTags = matchingProjectTags.map(pt => pt.projectId);
+
+    // 3. Find projects that match either title or tags
     const projects = await Project.find({
       isHidden: false,
-      $or: [{ title: { $regex: `\\b${query}`, $options: "i" } }],
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { _id: { $in: projectIdsFromTags } }
+      ]
     })
       .populate("AuthorId", "username avatar isVerified")
       .populate("collaborators.userId", "username avatar");
 
-    if (!projects.length) return res.json([]); // Return empty array if no results
+    if (!projects.length) return res.json([]);
 
     const projectIds = projects.map((p) => p._id);
 
-    // Fetch project tags
+    // 4. Get tags for those projects
     const projectTags = await ProjectTag.find({ projectId: { $in: projectIds } })
       .populate("tagId", "name");
 
-    // Fetch like counts
+    // 5. Get like counts
     const likeCounts = await Like.aggregate([
       { $match: { projectId: { $in: projectIds } } },
       { $group: { _id: "$projectId", count: { $sum: 1 } } },
     ]);
 
-    // Fetch user's liked projects
+    // 6. Get user's liked projects
     const userLikes = userId
       ? await Like.find({ projectId: { $in: projectIds }, userId }).select("projectId")
       : [];
 
-    // Map like counts
     const likeCountMap = {};
     likeCounts.forEach(({ _id, count }) => {
       likeCountMap[_id.toString()] = count;
     });
 
-    // Map user's liked projects
     const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
 
-    // Map tags to projects
+    // 7. Map tags to each project
     const tagsMap = {};
     projectTags.forEach((projectTag) => {
       const projectIdStr = projectTag.projectId.toString();
@@ -87,7 +102,7 @@ router.get("/project", verifyToken, async (req, res) => {
       }
     });
 
-    // Attach tags, likeCount, and isLiked to projects
+    // 8. Attach all details
     const projectsWithDetails = projects.map((project) => {
       const projectObj = project.toObject();
       const projectId = project._id.toString();

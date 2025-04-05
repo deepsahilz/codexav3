@@ -7,6 +7,7 @@ import verified_badge from "../assets/images/verified.svg"
 import save_icon from "../assets/images/bookmark.svg"
 import Avatar from './Avatar'
 import axiosInstance from '../utils/axiosInstance.js'
+import TagList from './TagList.jsx'
 
 
 
@@ -126,7 +127,8 @@ const ProjectCard = ({project,...props}) => {
             </a>
             <p className='text-stone-500 line-clamp-1 min-h-[1.5rem]'>{project.description}</p>
             {/* <p className='text-stone-500 line-clamp-2 min-h-[3rem]'>{project.description}</p> */}
-            <div className='flex flex-wrap gap-2'>
+            
+            {/* <div className='flex flex-wrap gap-2'>
                 {project.tags?.slice(0, 3).map((tag, j) => (
                     <div key={j} className='border text-[14px] pointer-events-none whitespace-nowrap text-stone-600 uppercase border-stone-500 px-3 py-[2px] transition-colors rounded-full'>
                     {tag}
@@ -137,7 +139,8 @@ const ProjectCard = ({project,...props}) => {
                     +{project.tags.length - 3} more
                     </div>
                 )}
-            </div>
+            </div> */}
+            <TagList tags={project.tags} />
 
 
         </div>

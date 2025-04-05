@@ -64,6 +64,7 @@ const SearchPage = () => {
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
       ) : type === "projects" ? (
+
         projects.length > 0 ? <ProjectGrid projects={projects} /> : <div>No projects found</div>
       ) : (
         users.length > 0 ? <UserGrid users={users} /> : <div>No users found</div>
