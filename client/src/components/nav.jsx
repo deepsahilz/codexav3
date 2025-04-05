@@ -121,7 +121,7 @@ const Nav = () => {
                 href="/explore"
                 className="text-2xl  font-semibold -mt-[3px] font-nb leading-none "
               >
-                Codexa
+                <span className="font-['dubtronic_solid'] mr-1.5">D</span>Codexa
               </a>
             </div>
 

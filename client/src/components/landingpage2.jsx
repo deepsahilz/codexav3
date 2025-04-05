@@ -5,7 +5,7 @@ import { useUserContext } from './context/UserContextProvider';
 const LandingPage = () => {
   const { isLoggedIn,loading } = useUserContext();
 
-  if(loading) return null
+  // if(loading) return null
   return isLoggedIn?<Navigate to="/explore" />:
   (
     <div className='bg-stone-200 gap-5 font-rejouice flex-col text-stone-800 flex justify-center items-center  p-20 h-[100vh] w-full'>

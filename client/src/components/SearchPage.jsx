@@ -26,6 +26,7 @@ const SearchPage = () => {
           setProjects(data);
         } else {
           const { data } = await axiosInstance.get(`/api/search/user?query=${query}`);
+          console.log(data);
           setUsers(data);
         }
       } catch (error) {
@@ -39,7 +40,7 @@ const SearchPage = () => {
   }, [query, type]); // Only refetch when query or type changes
 
   return (
-    <div className="px-20 py-10 font-neue">
+    <div className="px-20 py-10 bg-zinc-100 font-neue">
       
       {/* static buttons */}
       <div className="flex border-b border-zinc-300 mb-10 gap-7 font-semibold">
