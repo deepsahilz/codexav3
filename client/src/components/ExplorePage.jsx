@@ -28,9 +28,9 @@ const ExplorePage = () => {
 
   return (
     <div className='bg-zinc-100'>
-      {/* <Suggestions/> */}
+      <Suggestions/>
       {/* {feedData.length>0&& */}
-      <div className='mx-7 pt-7 pb-28'><ProjectGrid isLoading={loading} projects = {feedData} /></div>
+      <div className='mx-7  pb-28'><ProjectGrid isLoading={loading} projects = {feedData} /></div>
       {/* } */}
     </div> 
   )

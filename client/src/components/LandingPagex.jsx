@@ -33,7 +33,8 @@ return isLoggedIn?<Navigate to="/explore" />:(
                     <h1 className='text-[10.5rem] font-bold leading-none uppercase font-["test_founders_grotesk_x"]'>Codexa</h1>
                     <p className='text-[1.2rem] leading-none'>Social platform for developers to connect, share projects, get inspired and collaborate with fellow developers</p>
                     {/* <Link to ="/signup"><Buttonx className="mt-5 ">Sign up</Buttonx></Link> */}
-                    <button className="mt-5 ">Sign up</button>
+                    <Link to ="/signup"><button className="mt-5 rounded-md px-3 py-1 bg-white  text-black font-semibold hover:bg-purple-300">Get started</button>
+                    </Link>
                 </div>
 
             </div>
@@ -42,7 +43,7 @@ return isLoggedIn?<Navigate to="/explore" />:(
                 <div className='max-w-[30rem]'>
                     <h1 className='text-[4rem] leading-none'>Showcase your work to the world</h1>
                 </div>
-                <div className="mt-16 flex gap-3 w-full">
+                {/* <div className="mt-16 flex gap-3 w-full">
                 {flexdata.map((item, i) => (
                     <div
                     key={i}
@@ -63,7 +64,7 @@ return isLoggedIn?<Navigate to="/explore" />:(
 
                     </div>
                 ))}
-                </div>
+                </div> */}
 
                 
 

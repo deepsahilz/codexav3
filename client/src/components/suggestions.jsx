@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import searchIcon from "../assets/images/searchIcon.svg"
+import { Link } from 'react-router-dom';
 
 const suggest_list = [
     { text: "javascript" },
@@ -46,11 +48,15 @@ const Suggestions = () => {
              transition: 'transform 0.3s ease'
            }}>
         {suggest_list.map((item, i) => (
-          <a href="#" key={i}>
-            <div className="border-[1.5px] text-[1rem] cursor-pointer whitespace-nowrap bg-stone-200 border-stone-300 text-stone-400 px-5 py-[10px] transition-colors rounded-md hover:bg-stone-300 hover:text-stone-500 capitalize">
-              {item.text}
+          
+          <Link to={`/search?query=${item.text}`} key={i}>
+            <div className="border-[1.5px] text-[1rem] cursor-pointer whitespace-nowrap bg-stone-200 border-stone-300 text-stone-400 px-5 py-[10px]  transition-colors rounded-md hover:bg-stone-300 hover:text-stone-500 capitalize">
+              <div className='flex gap-2 items-center'>
+              <img src={searchIcon} className='w-4 h-4 opacity-55'/>
+              <h3 className='pr-5'>{item.text}</h3>
+              </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
 

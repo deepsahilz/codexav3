@@ -108,7 +108,7 @@ const EditProfile = () => {
                     'Content-Type': 'multipart/form-data' 
                   },
                 showToast:true,
-                message:"Profile updated successfully"
+                toastMessage:"Profile updated successfully"
             } );
             navigate(`/user/${data.username}`);
           
@@ -260,7 +260,7 @@ const EditProfile = () => {
                         </div>
 
                         {/* Tags Input - Make sure to pass control */}
-                        <TagsInput tags={skills} setTags={setSkills} control={control}/>
+                        <TagsInput label = "Skills" placeholder="e.g., React, Node.js, UI/UX" subLabel="Add tags related to your kills" tags={skills} setTags={setSkills} control={control}/>
 
                         {/* Profile Visibility */}
                         <div className="col-span-2">

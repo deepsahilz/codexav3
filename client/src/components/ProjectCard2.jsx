@@ -122,9 +122,9 @@ const ProjectCard = ({project,...props}) => {
             
         </div>
         
-        <div className='ml-1 space-y-2 flex justify-between'>
+        <div className='ml-1 space-y-2 mb-2 flex justify-between'>
             <div className='flex items-center gap-1'>
-                <Avatar width="26px" height="26px" className='mt-[6px]' username={project.AuthorId.username} avatar_url={project.AuthorId.avatar}/>
+                {/* <Avatar width="26px" height="26px" className='mt-[6px]' username={project.AuthorId.username} avatar_url={project.AuthorId.avatar}/> */}
 
                 <h1 className='text-lg font-neue  text-zinc-700 mt-2 font-semibold leading-none  capitalize'>{project.title}</h1>
 
@@ -139,13 +139,13 @@ const ProjectCard = ({project,...props}) => {
                     } */}
             </div>
             {/* <p className='text-stone-500 line-clamp-1 min-h-[1.5rem]'>{project.description}</p> */}
-            {/* <TagList tags={project.tags} /> */}
             <div className='border text-xs px-1 py-[2px] flex justify-center rounded-md text-zinc-700 border-zinc-500 '>
                 {project.type||"Web app"}
             </div>
 
 
         </div>
+            <TagList  tags={project.tags} />
 
     </div>
   )

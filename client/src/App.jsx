@@ -18,6 +18,7 @@ import OpenProject from './components/OpenProject'
 import PageLoader from './components/PageLoader'
 import LandingPagex from './components/LandingPagex'
 import { AnimatePresence } from 'framer-motion'
+import LandingPage1 from './components/LandingPage1'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -47,7 +48,7 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/dev" element={<ChatPage />} />
-            <Route path="/" element={<LandingPagex />} />
+            <Route path="/" element={<LandingPage1 />} />
 
             <Route element={<Protectedroutes />}>
               <Route path="/chat" element={<ChatPage />} />

@@ -26,7 +26,7 @@ const SearchBar = () => {
 
 
 
-  const dummyData = ["hello", "javacom", "bye logy"];
+  // const dummyData = ["hello", "javacom", "bye logy"];
   const recentSearches = [
     "java",
     "Library management system",
@@ -42,7 +42,7 @@ const SearchBar = () => {
     }
   
     const fetchSuggestions = async () => {
-      if (!searchTerm) return setSuggestions(dummyData);
+      if (!searchTerm) return;
   
       try {
         const { data } = await axiosInstance.get(`/api/suggest/project?query=${searchTerm}`);
@@ -87,6 +87,7 @@ const SearchBar = () => {
 //MAIN SEARCH FUNCTION
 const handleSearch=(query)=>{
   navigate(`/search?query=${query}`);
+  // setSearchHistory(prev => [query, ...prev]);
   addSearchHistory(query);
   setShowSearchModal(false);
   setValue("search", "");
@@ -107,6 +108,7 @@ const fetchSearchHistory = async () => {
 const addSearchHistory = async (searchTerm) => {
   try {
       await axiosInstance.post(`api/user/search-history`, { searchTerm });
+      setSearchHistory(prev => [searchTerm, ...prev]);
       // fetchSearchHistory();
   } catch (error) {
       console.error("Failed to add search history", error);
@@ -114,6 +116,7 @@ const addSearchHistory = async (searchTerm) => {
 };
 const handleRemoveSearch = async (searchTerm) => {
   try {
+    console.log("to delete: ",searchTerm)
       await axiosInstance.delete(`api/user/search-history`, { data: { searchTerm } });
       fetchSearchHistory(); 
   } catch (error) {
@@ -152,10 +155,11 @@ const renderModalContent = () => {
             {searchHistory.map((item, i) => (
               <li
                 key={i}
-                onClick={() => handleSearch(item)}
                 className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
-              >
-                <div className="flex  items-center capitalize">
+                >
+                <div 
+                onClick={() => handleSearch(item)}
+                className="flex  items-center capitalize">
                   <img className="w-6 h-6 opacity-50 mr-2 " src={recentIcon} />
                   {item}
                 </div>
@@ -177,10 +181,11 @@ const renderModalContent = () => {
             {searchHistory.map((item, i) => (
               <li
                 key={i}
-                onClick={() => handleSearch(item)}
                 className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
-              >
-                <div className="flex  items-center capitalize">
+                >
+                <div 
+                onClick={() => handleSearch(item)}
+                className="flex items-center capitalize">
                   <img className="w-6 h-6 opacity-50 mr-2 " src={recentIcon} />
                   {item}
                 </div>

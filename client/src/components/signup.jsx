@@ -8,8 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../utils/axiosInstance'
 import { motion, AnimatePresence } from "framer-motion";
-// import banner from '../../../../stack (2).jfif'
+import banner from '../assets/images/side (4).jfif'
 import codexaLogo from "../assets/images/Logo-1.png"
+import commentIcon from "../assets/images/comment_icon.svg";
+
 
 const signup = () => {
 
@@ -19,7 +21,10 @@ const signup = () => {
 
   const onSubmit = async (data) => {
     try {
-        const response = await axiosInstance.post("/api/auth/signup", data);
+        const response = await axiosInstance.post("/api/auth/signup", data,{
+          showToast:true,
+          toastMessage:"Account created successfully"
+        });
         console.log(response.data); 
         navigate("/login");
 
@@ -29,16 +34,13 @@ const signup = () => {
 };
 
 const texts = [
-  // "Create fearlessly.\nBuild what matters.",
-  // "Ideas in motion.\nProjects with purpose.",
-  "Code. Share.\nMake it unforgettable.",
+  
   "Showcase your work\n to the world",
+  "Your code deserves a stage.",
+  "The community your repo’s been missing.",
   "Your next inspiration\n awaits you",
   "Discover, collaborate, and level up.",
-  "Build Cool Sh*t. Show It Off.",
-  // "Not Just Code. It's You."
-  // "Code meets community",
-  // "Create, Express and Inspire others",
+ 
 
 ];
 
@@ -64,14 +66,16 @@ const texts = [
         <p className="text-white opacity-75">For the developers, by the developers</p>
     </div> */}
 
-    <div className="bg-black w-[50%] p-2   relative hidden md:flex md:flex-col md:justify-center">
+    <div className=" w-[50%] relative hidden md:flex md:flex-col md:justify-center">
       <div className='absolute top-0 left-0 flex flex-col h-full w-full justify-between p-10'>
         <div className='h-full w-full'>
           <h1 className="text-xl flex items-center gap-[6px]  font-rejouice font-semibold tracking-wide text-white">
             <img className='w-5 h-5 -mt-[5px]' src={codexaLogo}/>
             Codexa.io</h1>
           {/* <h2 className="text-xl tracking-tight font-['sora'] mt-4  text-white leading-[2rem] mb-4">Digital platform for developers to showcase their work</h2> */}
-          <div className="text-2xl text-white  font-nb tracking-wide font-bold  mt-10 h-full w-full relative overflow-hidden">
+
+        </div>
+          <div className="text-2xl  text-white flex items-end  font-nb tracking-wide font-bold  mt-10 h-full w-full relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={texts[currentTextIndex]}
@@ -81,16 +85,15 @@ const texts = [
           transition={{ duration: 0.6, ease: "easeInOut" }}
           className="absolute w-full whitespace-pre-line flex"
         >
-          <div className='bg-white w-4 h-4 mt-2 mr-2 rounded-full'></div>
+          <img className='w-5 h-5 invert mt-1.5 mr-3' src={commentIcon} alt="comment icon"/>
+          
           {texts[currentTextIndex]}
         </motion.div>
       </AnimatePresence>
     </div>
-
-        </div>
-        <p className="text-white font-semibold">For devs, by devs</p>
+        {/* <p className="text-white font-semibold">For devs, by devs</p> */}
       </div>
-        {/* <img className='w-full h-full rounded-lg object-cover' src={banner}/> */}
+        <img className='w-full h-full rounded-lg object-cover' src={banner}/>
     </div>
         
     <div className="w-full md:w-[55%] relative flex items-center font-neue">

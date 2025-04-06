@@ -380,15 +380,15 @@ const Nav = () => {
             <div className="flex gap-5 items-center">
               <NavLink
                 to="/login"
-                className="px-3 py-1 border-[2px] border-stone-500 transition-colors  hover:bg-stone-800 hover:border-stone-400 h-full bg-black rounded-[7px]"
+                className="px-3 py-1  border-stone-500 transition-colors hover:bg-stone-800 hover:border-stone-400 h-full bg-black rounded-[7px]"
               >
                 Log in
               </NavLink>
               <NavLink
                 to="/signup"
-                className="px-3 py-1  bg-bloopy rounded-md "
+                className="px-3 py-1 bg-bloopy rounded-md "
               >
-                Sign up
+                Get started
               </NavLink>
             </div>
           )}

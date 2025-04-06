@@ -66,7 +66,7 @@ const TagList = ({ tags = [] }) => {
       {visibleTags.map((tag, i) => (
         <div
           key={i}
-          className='border text-[14px] pointer-events-none whitespace-nowrap text-stone-600 uppercase border-stone-500 px-3 py-[2px] transition-colors rounded-full'
+          className='border text-[14px] pointer-events-none whitespace-nowrap text-zinc-600 uppercase border-zinc-400 px-3 pt-[2px] pb-[8px] transition-colors rounded-lg'
         >
           {tag}
         </div>

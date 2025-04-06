@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import 'react-toastify/dist/ReactToastify.css';
+import codexaLogo from "../assets/images/Logo-1.png"
+
 
 import loaderIcon from '../assets/images/loader_icon2.svg'
 import googleIcon from '../assets/images/google_icon.svg'
@@ -42,10 +44,15 @@ const login = () => {
     <div className="bg-stone-200 flex items-center w-full h-screen">
     <div className=" bg-white mx-auto flex rounded-lg shadow-lg overflow-hidden w-[50rem] ">
       
-      <div className="bg-gradient-to-r from-purple-400 via-blue-500 to-blue-600 w-[45%] p-12 flex flex-col justify-center">
-        <h1 className="text-[2rem] tracking-tight font-['sora'] font-semibold text-white">Codexa</h1>
+      <div className="bg-black w-[45%] p-12 flex flex-col justify-center">
+        <div className='h-full w-full'>
+                  <h1 className="text-xl flex items-center gap-[6px]  font-rejouice font-semibold tracking-wide text-white">
+                    <img className='w-5 h-5 -mt-[5px]' src={codexaLogo}/>
+                    Codexa.io</h1>        
+                </div>
+        {/* <h1 className="text-[2rem] tracking-tight font-['sora'] font-semibold text-white">Codexa</h1>
         <h2 className="text-[1.7rem] tracking-tight font-['sora']  text-stone-200 leading-[2rem] mb-4">Digital platform for developers to showcase their work</h2>
-        <p className="text-white opacity-75">For the developers, by the developers</p>
+        <p className="text-white opacity-75">For the developers, by the developers</p> */}
     </div>
     
     
@@ -58,7 +65,7 @@ const login = () => {
 
         <div className="w-full">
           <div className="mb-8 ">
-              <h2 className="text-[1.6rem] font-semibold tracking-tighter   text-gray-800">Log in to Codexa 👋</h2>
+              <h2 className="text-[1.6rem] font-semibold tracking-tighter   text-gray-800">Welcome back.</h2>
           </div>
 
           <form action="" onSubmit={handleSubmit(handleLogin)}>

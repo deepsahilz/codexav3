@@ -146,7 +146,7 @@ const ProfilePage = () => {
              
             <div className='relative'>
                 {userData&&
-                <Avatar  avatar_url={userData.avatar} width="10rem" height="10rem" className="text-4xl absolute -top-[7rem] border-4 border-white"/>}
+                <Avatar  avatar_url={userData.avatar} username={userData.username} width="10rem" height="10rem" className="text-4xl absolute -top-[7rem] border-4 border-white"/>}
                 <div className='mt-5'>
                     <h1 className='font-semibold text-2xl mt-16 text-zinc-800 mb-4'>@{userData.username||"loading"}</h1>
                     <h1 className='font-semibold text-5xl capitalize text-zinc-900 mb-4'>{userData.fullName||"loading"}</h1>
