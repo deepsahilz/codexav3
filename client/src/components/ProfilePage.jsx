@@ -9,7 +9,7 @@ import ProfileFooter from './ProfileFooter';
 import axiosInstance from '../utils/axiosInstance.js';
 import ProjectGrid from './ProjectGrid';
 import Avatar from './Avatar';
-import bannerImg from "../../../../ux-banner.webp"
+import bannerImg from "../assets/images/ux-banner.webp"
 import OpenProjectSkeleton from './OpenProjectSkeleton.jsx';
 
 const ProfilePage = () => {

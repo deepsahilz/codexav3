@@ -8,8 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../utils/axiosInstance'
 import { motion, AnimatePresence } from "framer-motion";
-import banner from '../../../../stack (2).jfif'
-import codexaLogo from "../../../../Logo-1.png"
+// import banner from '../../../../stack (2).jfif'
+import codexaLogo from "../assets/images/Logo-1.png"
 
 const signup = () => {
 

@@ -13,7 +13,7 @@ import logout_icon from "../assets/images/logout_icon.svg";
 import edit_icon from "../assets/images/edit_icon.svg";
 import SearchBar from "./SearchBar.jsx";
 import NavLink1 from "./NavLink1.jsx";
-import CodexaLogo from "../../../../Logo-1.png"
+import CodexaLogo from "../assets/images/Logo-1.png"
 
 
 
