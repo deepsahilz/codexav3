@@ -9,6 +9,8 @@ import ProfileFooter from './ProfileFooter';
 import axiosInstance from '../utils/axiosInstance.js';
 import ProjectGrid from './ProjectGrid';
 import Avatar from './Avatar';
+import bannerImg from "../../../../ux-banner.webp"
+import OpenProjectSkeleton from './OpenProjectSkeleton.jsx';
 
 const ProfilePage = () => {
     const dummyuser = {
@@ -63,6 +65,7 @@ const ProfilePage = () => {
     const[userData,setUserData] = useState({});
     const [projectsLoading, setProjectsLoading] = useState(true);
     const [toNotify,setToNotify] = useState(false);
+    const [loading,setLoading] = useState(true);
     
    
     const handleFollow=async()=>{
@@ -118,6 +121,7 @@ const ProfilePage = () => {
             const response  = await axiosInstance.get(`/api/user/${username}`);
             console.log("From profile",response.data)
             setUserData(response.data);
+            setLoading(false);
         }
         fetchdata();
     },[username])
@@ -131,16 +135,20 @@ const ProfilePage = () => {
         setProjectsLoading(false);
     },[])
 
+    if(loading) return <OpenProjectSkeleton/>
   return (
     <>
         {/* user profile section */}
-        <div className='bg-zinc-200 w-full px-20 py-10 flex items-start font-neue gap-20'>
+        <div className='w-full h-[10rem] overflow-hidden bg-blue-400'>
+            <img className='w-full object-cover' src={bannerImg}/>
+        </div>
+        <div className='bg-zinc-100 w-full px-20 py-10 flex items-start font-neue gap-20'>
              
-            <div>
-                
-                <Avatar username={user.username} avatar_url={user.avatar} width="10rem" height="10rem" className="text-4xl"/>
+            <div className='relative'>
+                {userData&&
+                <Avatar  avatar_url={userData.avatar} width="10rem" height="10rem" className="text-4xl absolute -top-[7rem] border-4 border-white"/>}
                 <div className='mt-5'>
-                    <h1 className='font-semibold text-2xl text-zinc-800 mb-4'>@{userData.username||"loading"}</h1>
+                    <h1 className='font-semibold text-2xl mt-16 text-zinc-800 mb-4'>@{userData.username||"loading"}</h1>
                     <h1 className='font-semibold text-5xl capitalize text-zinc-900 mb-4'>{userData.fullName||"loading"}</h1>
                     {/* action buttons */}
                     {!userData.isOwnProfile?(
@@ -161,7 +169,7 @@ const ProfilePage = () => {
                         </div>) 
                         : (
                         <div className="flex gap-2">
-                            <Link to={`/user/${user.username}/edit`} className="bg-blue-500 rounded-lg px-4 py-1 text-white">
+                            <Link to={`/user/${userData.username}/edit`} className="bg-blue-500 rounded-lg px-4 py-1 text-white">
                                 Edit Profile
                             </Link>
                         </div>

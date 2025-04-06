@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../utils/axiosInstance'
 import { motion, AnimatePresence } from "framer-motion";
 import banner from '../../../../stack (2).jfif'
+import codexaLogo from "../../../../Logo-1.png"
 
 const signup = () => {
 
@@ -66,7 +67,9 @@ const texts = [
     <div className="bg-black w-[50%] p-2   relative hidden md:flex md:flex-col md:justify-center">
       <div className='absolute top-0 left-0 flex flex-col h-full w-full justify-between p-10'>
         <div className='h-full w-full'>
-          <h1 className="text-2xl  font-rejouice font-semibold tracking-wide text-white">D Codexa.io</h1>
+          <h1 className="text-xl flex items-center gap-[6px]  font-rejouice font-semibold tracking-wide text-white">
+            <img className='w-5 h-5 -mt-[5px]' src={codexaLogo}/>
+            Codexa.io</h1>
           {/* <h2 className="text-xl tracking-tight font-['sora'] mt-4  text-white leading-[2rem] mb-4">Digital platform for developers to showcase their work</h2> */}
           <div className="text-2xl text-white  font-nb tracking-wide font-bold  mt-10 h-full w-full relative overflow-hidden">
       <AnimatePresence mode="wait">

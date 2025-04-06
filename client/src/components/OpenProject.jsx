@@ -6,6 +6,7 @@ import CommentSection from './CommentSection.jsx';
 import DummyComp from './DummyComp.jsx';
 import ProjectOverview from './ProjectOverview.jsx';
 import arrow from '../assets/images/arrow_top_right.svg'
+import OpenProjectSkeleton from './OpenProjectSkeleton.jsx';
 
 
 const OpenProject = () => {
@@ -38,14 +39,14 @@ const OpenProject = () => {
     },[])
 
   
-    if (loading) return <div className="flex items-center  h-[100vh] justify-center gap-2 text-stone-600">
-    <span className="animate-spin w-7 h-7  border-2 border-blue-500 border-t-transparent rounded-full"></span>
-    <span className="text-[14px] font-semibold uppercase">Loading...</span>
-    </div>
+    if (loading) return <OpenProjectSkeleton/>
+    
+    
 
     return (
+      
         <div className=' w-full  font-neue text-zinc-800'>
-        <div className='w-full px-20 pt-8 flex flex-col bg-zinc-100  gap-3 rounded-xl border-b  pb-40'>
+        <div className='w-full px-7 pt-8 flex flex-col bg-zinc-100  gap-3 rounded-xl border-b  pb-40'>
             
             {/* header */}
             <div className='basics'>

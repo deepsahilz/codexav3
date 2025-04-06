@@ -71,10 +71,12 @@ const AddProject = ({onClose}) => {
     
     const onSubmit = async(data) => {
         const formData = new FormData();
-        console.log(collabs);
+        console.log(data.title);
+        console.log(data.type);
       
         // Append form fields
         formData.append("title", data.title);
+        formData.append("type", data.type);
         formData.append("description", data.description);
         formData.append("liveLink", data.liveLink);
         formData.append("codeLink", data.codeLink);				
@@ -155,6 +157,23 @@ const AddProject = ({onClose}) => {
                 className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                {errors.title && (<p className="text-red-500 text-sm mt-2">{errors.title?.message}</p>)}
+
+            </div>
+          {/* type */}
+            <div className='w-full'>
+              <label className="block text-gray-700 font-semibold mb-1">Type</label>
+              <input
+                type="text"
+                {...register("type", {
+                  required:{
+                    value:true,
+                    message:"Project type is required"
+                  } 
+                })}
+                placeholder='e.g., "Web, Api, Mobile"'
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+               {errors.type && (<p className="text-red-500 text-sm mt-2">{errors.type?.message}</p>)}
 
             </div>
 

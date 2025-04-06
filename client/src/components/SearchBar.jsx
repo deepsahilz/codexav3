@@ -89,7 +89,7 @@ const handleSearch=(query)=>{
   navigate(`/search?query=${query}`);
   addSearchHistory(query);
   setShowSearchModal(false);
-  // setValue("search", "");
+  setValue("search", "");
   document.activeElement.blur();
   
 }

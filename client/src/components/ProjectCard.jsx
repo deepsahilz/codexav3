@@ -44,13 +44,12 @@ const ProjectCard = ({project,...props}) => {
     };
 
     return (
-    <div className='flex flex-col gap-2 h-full w-full'
-    >
-        <div className='w-full h-full cursor-pointer group relative  rounded-lg overflow-hidden  '>
+    <div className='flex flex-col gap-2 h-full w-full'>
+        <div className='w-full h-full cursor-pointer  border border-zinc-300 group relative rounded-lg overflow-hidden'>
 
-            <div onClick={()=>{navigate(`/project/${project._id}`)}} className='opacity-30 transition-opacity  group-hover:opacity-40 bg-black h-full w-full absolute' />
+            <div onClick={()=>{navigate(`/project/${project._id}`)}} className='opacity-0 transition-opacity  group-hover:opacity-40 bg-black h-full w-full absolute' />
 
-            <div className='absolute top-3 text-white pl-4 pr-5 w-full flex justify-between items-center gap-2'>
+            <div className='absolute top-3 opacity-0 group-hover:opacity-100 text-white pl-4 pr-5 w-full flex justify-between items-center gap-2'>
                 
                 <div className='flex gap-2'>
                     {<div className="w-7 h-7 rounded-full overflow-hidden shadow-lg">
@@ -68,7 +67,8 @@ const ProjectCard = ({project,...props}) => {
                     }
                 </div>
 
-                <a title='See it live' className='opacity-0 group-hover:opacity-100 transition-opacity'>
+                <a title='See it live' target="_blank"
+  rel="noopener noreferrer" href={project.liveLink} className='opacity-0 group-hover:opacity-100 transition-opacity'>
                     <div className='w-6 h-6 flex justify-center items-center rounded-md borderborder-blue-600 bg-blue-600'>
                         <img className='invert w-5 h-5 ' src={arrow_icon}/>
                     </div>

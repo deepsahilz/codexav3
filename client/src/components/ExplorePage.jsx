@@ -27,10 +27,10 @@ const ExplorePage = () => {
   },[])
 
   return (
-    <div className='bg-stone-50'>
-      <Suggestions/>
+    <div className='bg-zinc-100'>
+      {/* <Suggestions/> */}
       {/* {feedData.length>0&& */}
-      <div className='mx-7 '><ProjectGrid isLoading={loading} projects = {feedData} /></div>
+      <div className='mx-7 pt-7 pb-28'><ProjectGrid isLoading={loading} projects = {feedData} /></div>
       {/* } */}
     </div> 
   )

@@ -17,6 +17,7 @@ import SearchPage from './components/SearchPage'
 import OpenProject from './components/OpenProject'
 import PageLoader from './components/PageLoader'
 import LandingPagex from './components/LandingPagex'
+import { AnimatePresence } from 'framer-motion'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -25,11 +26,8 @@ function App() {
     const handleLoad = () => {
       setTimeout(() => {
         setIsLoading(false);
-        // document.body.classList.remove("loading");
-      }, 2000);
+      }, 1500);
     };
-  
-    // document.body.classList.add("loading"); // 👈 Add this
   
     if (document.readyState === "complete") {
       handleLoad();
@@ -38,10 +36,6 @@ function App() {
       return () => window.removeEventListener("load", handleLoad);
     }
   }, []);
-  
-  
-
-  // if (isLoading) return <PageLoader />
 
   return (
     <>
@@ -66,7 +60,11 @@ function App() {
             </Route>
           </Route>
         </Routes>
-        {isLoading && <PageLoader />}
+        
+        {/* Loader with AnimatePresence to handle exit animations */}
+        <AnimatePresence mode="wait">
+          {isLoading && <PageLoader />}
+        </AnimatePresence>
       </UserContextProvider>
       <ToastContainer />
     </>
