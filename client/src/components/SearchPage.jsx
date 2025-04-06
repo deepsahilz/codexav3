@@ -26,6 +26,7 @@ const SearchPage = () => {
           setProjects(data);
         } else {
           const { data } = await axiosInstance.get(`/api/search/user?query=${query}`);
+          console.log(data);
           setUsers(data);
         }
       } catch (error) {
@@ -39,7 +40,7 @@ const SearchPage = () => {
   }, [query, type]); // Only refetch when query or type changes
 
   return (
-    <div className="px-20 py-10 font-neue">
+    <div className="px-7 py-10 bg-zinc-100 font-neue">
       
       {/* static buttons */}
       <div className="flex border-b border-zinc-300 mb-10 gap-7 font-semibold">
@@ -58,15 +59,18 @@ const SearchPage = () => {
       </div>
 
       {/* Conditionally Render Loading & Data */}
+      <div className="w-full min-h-screen">
       {loading ? (
         <div className="flex justify-center items-center mt-10">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4  border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
       ) : type === "projects" ? (
+
         projects.length > 0 ? <ProjectGrid projects={projects} /> : <div>No projects found</div>
       ) : (
         users.length > 0 ? <UserGrid users={users} /> : <div>No users found</div>
       )}
+    </div>
     </div>
   );
 };

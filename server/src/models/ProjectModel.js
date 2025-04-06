@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const projectSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
+    type: { type: String, required: true },
     AuthorId:{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true  },
     description: { type: String },
     thumbnail: { type: String }, // URL for project image

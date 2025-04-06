@@ -88,7 +88,8 @@ export const createProject = async (req, res) => {
     const { 
       title, 
       description, 
-      liveLink, 
+      liveLink,
+      type, 
       codeLink, 
       projectStatus
     } = req.body;
@@ -116,6 +117,7 @@ export const createProject = async (req, res) => {
     // Create new project
     const newProject = new Project({
       title,
+      type,
       description,
       AuthorId: req.user.userId, 
       codeLink,

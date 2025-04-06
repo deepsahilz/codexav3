@@ -12,6 +12,8 @@ import searchIcon from "../assets/images/searchIcon.svg";
 import logout_icon from "../assets/images/logout_icon.svg";
 import edit_icon from "../assets/images/edit_icon.svg";
 import SearchBar from "./SearchBar.jsx";
+import NavLink1 from "./NavLink1.jsx";
+import CodexaLogo from "../../../../Logo-1.png"
 
 
 
@@ -119,8 +121,10 @@ const Nav = () => {
             <div className="logo h-full mx-auto flex items-center">
               <a
                 href="/explore"
-                className="text-2xl  font-semibold -mt-[3px] font-nb leading-none "
+                className="text-2xl  font-semibold flex items-center -mt-[3px] font-nb leading-none "
               >
+                {/* <span className="font-['dubtronic_solid'] mr-1.5">D</span> */}
+                <img className="w-[21px] h-[21px] mr-1" src={CodexaLogo}/>
                 Codexa
               </a>
             </div>
@@ -136,6 +140,7 @@ const Nav = () => {
                   >
                     Explore
                   </NavLink>
+                  {/* <NavLink1 label={item.label} to={item.to} /> */}
                 </li>
               )}
 

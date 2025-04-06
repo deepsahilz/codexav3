@@ -89,7 +89,9 @@ const handleSearch=(query)=>{
   navigate(`/search?query=${query}`);
   addSearchHistory(query);
   setShowSearchModal(false);
+  setValue("search", "");
   document.activeElement.blur();
+  
 }
 
 //SEARCH-HISTORY-FUNCTIONS
@@ -120,69 +122,93 @@ const handleRemoveSearch = async (searchTerm) => {
 };
 
   
-  const renderModalContent = () => {
-    return searchTerm ? (
-      <div className="">
-        <div className="flex mb-3 items-center px-3">
-          <img className="w-7 h-7 opacity-50 " src={recentIcon} />
-          <h4 className="text-[13px] font-medium text-zinc-500 uppercase ">
+const renderModalContent = () => {
+  return searchTerm ? (
+    <div className="">   
+      {suggestions.length > 0 ? (
+        <>
+          <h4 className="text-[13px] font-medium ml-5 text-zinc-500 uppercase">
             Projects
           </h4>
-        </div>
-        <ul>
-          {suggestions.map((suggestion, i) => (
-            <li
-              key={i}
-              className={`${i === selectedIndex ? "bg-blue-100" : "hover:bg-blue-100"
-              } text-lg  font-bold py-1 px-5 flex items-center text-zinc-700 cursor-pointer transition-all`}
-              onClick={() => {handleSearch(suggestion)}}
-            >
-              {/* {suggestion} */}
-              {highlightText(suggestion,searchTerm)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    ) : (
-      <div className="">
-        <div className="flex mb-3 items-center px-3">
-          <img className="w-7 h-7 opacity-50 " src={recentIcon} />
-          <h4 className="text-[13px] font-medium text-zinc-500 uppercase ">
-            Recent Searches
+          <ul>
+            {suggestions.map((suggestion, i) => (
+              <li
+                key={i}
+                className={`${i === selectedIndex ? "bg-blue-100" : "hover:bg-blue-100"} text-lg font-bold py-1 px-5 flex items-center text-zinc-700 cursor-pointer transition-all`}
+                onClick={() => handleSearch(suggestion)}
+              >
+                <img className="w-4 h-4 opacity-50 mr-2" src={searchIcon} />
+                {highlightText(suggestion, searchTerm)}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <>
+          <h4 className="text-[13px] ml-5 font-medium text-zinc-500 uppercase">
+            Recents
           </h4>
-        </div>
-        <ul>
-          {searchHistory.map((item, i) => (
-            <li
-              key={i}
-              className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
-            >
-              {item}
-              <span onClick={()=>handleRemoveSearch(item)} className="cursor-pointer text-xl font-medium text-zinc-400">
-                &times;
-              </span>
-            </li>
-          ))}
-        </ul>
-        <div className="mb-3 mt-7 px-5 flex gap-2">
-          <img className="w-5 h-5 opacity-50 " src={trendingIcon} />
-          <h4 className="text-[13px] font-medium text-zinc-500 uppercase ">
-            Trending Searches
+          <ul>
+            {searchHistory.map((item, i) => (
+              <li
+                key={i}
+                onClick={() => handleSearch(item)}
+                className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
+              >
+                <div className="flex  items-center capitalize">
+                  <img className="w-6 h-6 opacity-50 mr-2 " src={recentIcon} />
+                  {item}
+                </div>
+                <span onClick={() => handleRemoveSearch(item)} className="cursor-pointer text-xl font-medium text-zinc-400">
+                  &times;
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  ) : (
+    <div className="">
+      <h4 className="text-[13px] ml-5 font-medium text-zinc-500 uppercase">
+            Recents
           </h4>
-        </div>
-        <ul className="flex flex-wrap gap-2 px-5">
-          {recentSearches.map((recent, i) => (
-            <li
-              key={i}
-              className="px-2 py-1 text-sm hover:bg-zinc-200 text-zinc-600 border-zinc-300 cursor-pointer rounded-lg border"
-            >
-              {recent}
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {searchHistory.map((item, i) => (
+              <li
+                key={i}
+                onClick={() => handleSearch(item)}
+                className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
+              >
+                <div className="flex  items-center capitalize">
+                  <img className="w-6 h-6 opacity-50 mr-2 " src={recentIcon} />
+                  {item}
+                </div>
+                <span onClick={() => handleRemoveSearch(item)} className="cursor-pointer text-xl font-medium text-zinc-400">
+                  &times;
+                </span>
+              </li>
+            ))}
+      </ul>
+      <div className="mb-3 mt-7 px-5 flex gap-2">
+        <img className="w-5 h-5 opacity-50" src={trendingIcon} />
+        <h4 className="text-[13px] font-medium text-zinc-500 uppercase">
+          Trending Searches
+        </h4>
       </div>
-    );
-  };
+      <ul className="flex flex-wrap gap-2 px-5">
+        {recentSearches.map((recent, i) => (
+          <li
+            key={i}
+            className="px-2 py-1 text-sm hover:bg-zinc-200 text-zinc-600 border-zinc-300 cursor-pointer rounded-lg border"
+          >
+            {recent}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
   
 
   return (
