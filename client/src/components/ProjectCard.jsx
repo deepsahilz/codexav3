@@ -104,7 +104,7 @@ const ProjectCard = ({project,...props}) => {
                 
                 <div className='flex items-center gap-[5px] -mb-[2px]'>
                     <img className='w-[18px] h-[18px] invert ' src={comment_icon} /> 
-                    <div className='text-[12px] -mb-[2px]'>24</div>
+                    <div className='text-[12px] -mb-[2px]'>{project.commentCount}</div>
                 </div>
                 </div>
                 <div className='flex items-center gap-[5px] -mb-[2px]'>

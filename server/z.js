@@ -353,3 +353,77 @@ const port = process.env.PORT
 app.listen(port,()=>{
     console.log(`app running on http://localhost:${port}`)
 })
+
+// export const getAllProjects = async (req, res) => {
+//   try {
+//     const userId = req.user?.userId;
+//     const projects = await Project.find({ isHidden: false })
+//       .populate("AuthorId", "username avatar isVerified")
+//       .populate("collaborators.userId", "username avatar")
+//       .sort({ createdAt: -1 });
+
+//     const projectIds = projects.map((project) => project._id);
+
+//     const [projectTags, likeCounts, userLikes, commentCounts] = await Promise.all([
+//       ProjectTag.find({ projectId: { $in: projectIds } }).populate("tagId", "name"),
+//       Like.aggregate([
+//         { $match: { projectId: { $in: projectIds } } },
+//         { $group: { _id: "$projectId", count: { $sum: 1 } } },
+//       ]),
+//       userId
+//         ? Like.find({ projectId: { $in: projectIds }, userId }).select("projectId")
+//         : [],
+//       Comment.aggregate([
+//         { $match: { projectId: { $in: projectIds } } },
+//         { $group: { _id: "$projectId", count: { $sum: 1 } } },
+//       ]),
+//     ]);
+
+//     const likeCountMap = {};
+//     likeCounts.forEach(({ _id, count }) => {
+//       likeCountMap[_id.toString()] = count;
+//     });
+
+//     const commentCountMap = {};
+//     commentCounts.forEach(({ _id, count }) => {
+//       commentCountMap[_id.toString()] = count;
+//     });
+
+//     const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
+
+//     const tagsMap = {};
+//     projectTags.forEach((projectTag) => {
+//       const projectIdStr = projectTag.projectId.toString();
+//       if (!tagsMap[projectIdStr]) tagsMap[projectIdStr] = [];
+
+//       if (projectTag.tagId?.name) {
+//         projectTag.tagId.name.split(",").forEach((part) => {
+//           const trimmed = part.trim();
+//           if (trimmed) tagsMap[projectIdStr].push(trimmed);
+//         });
+//       }
+//     });
+
+//     const projectsWithDetails = projects.map((project) => {
+//       const projectObj = project.toObject();
+//       const projectId = project._id.toString();
+
+//       return {
+//         ...projectObj,
+//         tags: tagsMap[projectId] || [],
+//         likeCount: likeCountMap[projectId] || 0,
+//         isLiked: userLikedSet.has(projectId),
+//         commentCount: commentCountMap[projectId] || 0,
+//       };
+//     });
+
+//     res.status(200).json(projectsWithDetails);
+//   } catch (error) {
+//     console.error("Error fetching home feed projects:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch projects",
+//       error: error.message,
+//     });
+//   }
+// };

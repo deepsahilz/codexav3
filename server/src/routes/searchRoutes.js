@@ -5,6 +5,8 @@ import Project from "../models/ProjectModel.js";
 import ProjectTag from "../models/ProjectTagModel.js";
 import Tag from "../models/TagModel.js";
 import Like from "../models/LikeModel.js";
+import Save from "../models/SavedProjectModel.js";
+import Comment from "../models/CommentModel.js";
 
 
 const router = express.Router();
@@ -39,19 +41,16 @@ router.get("/project", verifyToken, async (req, res) => {
 
     const userId = req.user?.userId;
 
-    // 1. Find tags that match the query
     const matchingTags = await Tag.find({
       name: { $regex: query, $options: "i" }
     });
     const tagIds = matchingTags.map(tag => tag._id);
 
-    // 2. Get projectIds with those tags
     const matchingProjectTags = await ProjectTag.find({
       tagId: { $in: tagIds }
     });
     const projectIdsFromTags = matchingProjectTags.map(pt => pt.projectId);
 
-    // 3. Find projects that match either title or tags
     const projects = await Project.find({
       isHidden: false,
       $or: [
@@ -66,19 +65,30 @@ router.get("/project", verifyToken, async (req, res) => {
 
     const projectIds = projects.map((p) => p._id);
 
-    // 4. Get tags for those projects
     const projectTags = await ProjectTag.find({ projectId: { $in: projectIds } })
       .populate("tagId", "name");
 
-    // 5. Get like counts
-    const likeCounts = await Like.aggregate([
-      { $match: { projectId: { $in: projectIds } } },
-      { $group: { _id: "$projectId", count: { $sum: 1 } } },
+    const [likeCounts, commentCounts, saveCounts] = await Promise.all([
+      Like.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } },
+      ]),
+      Comment.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } },
+      ]),
+      Save.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } },
+      ]),
     ]);
 
-    // 6. Get user's liked projects
     const userLikes = userId
       ? await Like.find({ projectId: { $in: projectIds }, userId }).select("projectId")
+      : [];
+
+    const userSaves = userId
+      ? await Save.find({ projectId: { $in: projectIds }, userId }).select("projectId")
       : [];
 
     const likeCountMap = {};
@@ -86,15 +96,25 @@ router.get("/project", verifyToken, async (req, res) => {
       likeCountMap[_id.toString()] = count;
     });
 
-    const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
+    const commentCountMap = {};
+    commentCounts.forEach(({ _id, count }) => {
+      commentCountMap[_id.toString()] = count;
+    });
 
-    // 7. Map tags to each project
+    const savedCountMap = {};
+    saveCounts.forEach(({ _id, count }) => {
+      savedCountMap[_id.toString()] = count;
+    });
+
+    const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
+    const userSavedSet = new Set(userSaves.map((save) => save.projectId.toString()));
+
     const tagsMap = {};
     projectTags.forEach((projectTag) => {
       const projectIdStr = projectTag.projectId.toString();
       if (!tagsMap[projectIdStr]) tagsMap[projectIdStr] = [];
 
-      if (projectTag.tagId && projectTag.tagId.name) {
+      if (projectTag.tagId?.name) {
         projectTag.tagId.name.split(",").forEach((part) => {
           const trimmed = part.trim();
           if (trimmed) tagsMap[projectIdStr].push(trimmed);
@@ -102,7 +122,6 @@ router.get("/project", verifyToken, async (req, res) => {
       }
     });
 
-    // 8. Attach all details
     const projectsWithDetails = projects.map((project) => {
       const projectObj = project.toObject();
       const projectId = project._id.toString();
@@ -111,7 +130,10 @@ router.get("/project", verifyToken, async (req, res) => {
         ...projectObj,
         tags: tagsMap[projectId] || [],
         likeCount: likeCountMap[projectId] || 0,
+        commentCount: commentCountMap[projectId] || 0,
+        savedCount: savedCountMap[projectId] || 0,
         isLiked: userLikedSet.has(projectId),
+        isSaved: userSavedSet.has(projectId),
       };
     });
 
@@ -121,6 +143,7 @@ router.get("/project", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
 
 
 export default router;

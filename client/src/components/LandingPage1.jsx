@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import commentIcon from "../assets/images/comment_icon.svg";
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useUserContext } from './context/UserContextProvider';
 
 const LandingPage1 = () => {
   const phrases = [
@@ -11,10 +13,15 @@ const LandingPage1 = () => {
     "Inspire others with your digital creations.",
     "Turn ideas into reality, one line at a time."
   ];
+  
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const { isLoggedIn,loading } = useUserContext();
+
+  // if(loading) return null
+  
   
   useEffect(() => {
     const typingSpeed = isDeleting ? 30 : 70; // Faster when deleting
@@ -48,6 +55,7 @@ const LandingPage1 = () => {
     }
   }, [displayedText, isDeleting, phraseIndex, phrases]);
 
+  if(isLoggedIn) return <Navigate to="/explore" />
   return (
     <div className=''>
       <div className='w-full font-neue h-screen px-7 pt-5 bg-zinc-200'>

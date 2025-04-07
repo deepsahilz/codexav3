@@ -13,9 +13,14 @@ import TagList from './TagList.jsx'
 
 const ProjectCard = ({project,...props}) => {
     const [isLiked, setIsLiked] = useState(project.isLiked || false);
+    const [isSaved, setIsSaved] = useState(project.isSaved || false);
+
     const [likeCount, setLikeCount] = useState(project.likeCount || 0);
+    const [saveCount, setSaveCount] = useState(project.savedCount || 0);
     const navigate= useNavigate();
 
+
+    //like functions
     const toggleLike = async () => {
         if (isLiked) {
             await handleUnlike();
@@ -26,7 +31,6 @@ const ProjectCard = ({project,...props}) => {
         }
         setIsLiked(!isLiked);
     };
-
     const handleLike = async () => {
         try {
             await axiosInstance.post(`/api/project/${project._id}/like`);
@@ -34,12 +38,37 @@ const ProjectCard = ({project,...props}) => {
             console.error("Like failed:", error);
         }
     };
-
     const handleUnlike = async () => {
         try {
             await axiosInstance.delete(`/api/project/${project._id}/like`);
         } catch (error) {
             console.error("Unlike failed:", error);
+        }
+    };
+
+    //save functions
+    const toggleSave = async () => {
+        if (isSaved) {
+            await handleUnsave();
+            setSaveCount(saveCount - 1);
+        } else {
+            await handleSave();
+            setSaveCount(saveCount + 1);
+        }
+        setIsSaved(!isSaved);
+    };
+    const handleSave = async () => {
+        try {
+            await axiosInstance.post(`/api/project/${project._id}/save`);
+        } catch (error) {
+            console.error("Save failed:", error);
+        }
+    };   
+    const handleUnsave = async () => {
+        try {
+            await axiosInstance.delete(`/api/project/${project._id}/save`);
+        } catch (error) {
+            console.error("Unsave failed:", error);
         }
     };
 
@@ -105,13 +134,29 @@ const ProjectCard = ({project,...props}) => {
                 
                 <div className='flex items-center gap-[5px] -mb-[2px]'>
                     <img className='w-[18px] h-[18px] invert ' src={comment_icon} /> 
-                    <div className='text-[12px] -mb-[2px]'>24</div>
+                    <div className='text-[12px] -mb-[2px]'>{project.commentCount}</div>
                 </div>
                 </div>
-                <div className='flex items-center gap-[5px] -mb-[2px]'>
+
+                {/* <div className='flex items-center gap-[5px] -mb-[2px]'>
                     <img className='w-[18px] h-[18px] invert ' src={save_icon} /> 
                     <div className='text-[12px] -mb-[2px]'>24</div>
-                </div>
+                </div> */}
+                <button onClick={toggleSave} className='flex items-center gap-[5px] -mb-[2px]'>
+                    {/* <img className={`w-[18px] h-[18px] invert ${isSaved ? 'opacity-100' : 'opacity-50'}`} src={save_icon} /> */}
+                    {isSaved ? (
+                        <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 6.2C5 5.08 5 4.52 5.22 4.09C5.41 3.72 5.72 3.41 6.09 3.22C6.52 3 7.08 3 8.2 3H15.8C16.92 3 17.48 3 17.91 3.22C18.28 3.41 18.59 3.72 18.78 4.09C19 4.52 19 5.08 19 6.2V21L12 16L5 21V6.2Z" />
+                        </svg>
+                        ) : (
+                        <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 6.2C5 5.08 5 4.52 5.22 4.09C5.41 3.72 5.72 3.41 6.09 3.22C6.52 3 7.08 3 8.2 3H15.8C16.92 3 17.48 3 17.91 3.22C18.28 3.41 18.59 3.72 18.78 4.09C19 4.52 19 5.08 19 6.2V21L12 16L5 21V6.2Z" />
+                        </svg>
+                        )}
+
+                    <div className='text-[12px] -mb-[1px]'>{saveCount}</div>
+                </button>
+
             </div>
             
             <img 

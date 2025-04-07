@@ -10,7 +10,8 @@ import {
     getUserProjects,
     addSearchHistory,
     removeSearchHistoryItem,
-    getSearchHistory
+    getSearchHistory,
+    getUserSavedProjects
 } from "../controllers/userControllers.js";
 import verifyToken from "../middlewares/authMiddleware.js";
 import User from "../models/UserModel.js";
@@ -25,6 +26,7 @@ router.delete("/search-history", verifyToken, removeSearchHistoryItem);
 
 
 router.get("/:username/projects", verifyToken, getUserProjects); // ✔️fetch user projects
+router.get("/:username/saved-projects", verifyToken, getUserSavedProjects); // ✔️fetch user projects
 router.get("/:username",verifyToken, getUserProfile); // ✔️Get user profile
 router.post("/:username", verifyToken, updateUser); // ✔️Update user
 router.delete("/:userId", verifyToken, deleteUser); // Delete user
@@ -33,8 +35,8 @@ router.delete("/:userId", verifyToken, deleteUser); // Delete user
 router.post("/:userId/follow", verifyToken, followUser); // Follow a user
 router.delete("/:userId/follow", verifyToken, unfollowUser); // Unfollow a user
 
-router.get("/:userId/followers", getFollowers); // Get user's followers
-router.get("/:userId/following", getFollowing); // Get user's following list
+router.get("/:username/followers", getFollowers); // Get user's followers
+router.get("/:username/following", getFollowing); // Get user's following list
 
 
 

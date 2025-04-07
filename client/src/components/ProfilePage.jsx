@@ -62,8 +62,11 @@ const ProfilePage = () => {
     const[showFollowing,setShowFollowing] = useState(false)
     const[self,setself] = useState(false);
     const[userProjects,setUserProjects] = useState([])
+    const[userSavedProjects,setUserSavedProjects] = useState([])
+    const[showSavedProjects,setShowSavedProjects] = useState(false)
     const[userData,setUserData] = useState({});
     const [projectsLoading, setProjectsLoading] = useState(true);
+    const [savedProjectsLoading, setSavedProjectsLoading] = useState(true);
     const [toNotify,setToNotify] = useState(false);
     const [loading,setLoading] = useState(true);
     
@@ -89,14 +92,10 @@ const ProfilePage = () => {
     }
     const handleGetFollowers=async()=>{
         try {
-            axios.get(`http://localhost:5000/api/user/${username}/followers`,{},{withCredentials:true})
-            .then((response)=>{
-                console.log(response.data);
-                setUserFollowers(response.data);
-                console.log(UserFollowers);
-            })
-
-            
+            const response = await axios.get(`http://localhost:5000/api/user/${username}/followers`,{},{withCredentials:true})
+            // console.log("Fetched followers raw:", response.data, typeof response.data.followers);
+            setUserFollowers(response.data.followers);
+        
         } catch (error) {
             console.log(error);
         }
@@ -133,7 +132,14 @@ const ProfilePage = () => {
         }
         fetchProjects();
         setProjectsLoading(false);
-    },[])
+    },[username])
+
+    const fetchSavedProjects = async()=>{
+        const response  = await axiosInstance.get(`/api/user/${username}/saved-projects`);
+        console.log("From profile:savedprojects",response.data)
+        setUserSavedProjects(response.data);
+        setSavedProjectsLoading(false);
+    }
 
     if(loading) return <OpenProjectSkeleton/>
   return (
@@ -240,31 +246,46 @@ const ProfilePage = () => {
 
         {/* project section */}
         <div className='px-20 min-h-[25rem]  text-zinc-800'>
-            <div className="font-nb border-b mt-10 border-zinc-400 pb-2  flex justify-between items-end">
-            <h1 className="text-3xl  font-semibold">Projects</h1>
-            <h1 className="text-lg font-semibold pb-1">
+            <div className="font-nb border-b mt-10 border-zinc-400  flex justify-between items-end">
+            
+            {!userData.isOwnProfile?(<h1 className='text-2xl font-semibold pb-1'>Projects</h1>):(<div className='flex gap-5 '>
+                <button onClick={()=>(setShowSavedProjects(false))} className={`text-lg text-zinc-600 hover:text-zinc-800 pb-1 ${showSavedProjects||"border-b-2 border-blue-600 text-zinc-800 transition-colors -mb-[2px]"} font-semibold`}>Projects</button>
+
+                <button onClick={()=>{setShowSavedProjects(true);fetchSavedProjects()}} className={`text-lg text-zinc-600 hover:text-zinc-800 pb-1 ${showSavedProjects&&"border-b-2 text-zinc-800 border-blue-600 -mb-[2px]"} font-semibold`}>Saved Projects</button>
+            </div>)}
+            
+            <h1 className="text-lg font-semibold pb-2">
                 <span>Sort by</span>
                 <span className="border ml-2 bg-slate-200 p-1 rounded-lg text-[1rem]">
                 Latest
                 </span>
             </h1>
             </div>
-            <div className=" mt-10 min-h-[30rem]">
-            {projectsLoading?(<div>loading</div>):(
-              userProjects.length>0 ? (
-                <ProjectGrid columns={2}  projects={userProjects}></ProjectGrid>
+            <div className="mt-10 min-h-[30rem]">
+            {showSavedProjects ? (
+                savedProjectsLoading ? (
+                <div>loading</div>
+                ) : userSavedProjects.length > 0 ? (
+                <ProjectGrid columns={2} projects={userSavedProjects} />
+                ) : (
+                <h1 className="font-semibold text-xl mt-10 text-zinc-600">No projects saved yet</h1>
+                )
+            ) : projectsLoading ? (
+                <div>loading</div>
+            ) : userProjects.length > 0 ? (
+                <ProjectGrid columns={2} projects={userProjects} />
             ) : (
-                <h1 className='font-semibold text-xl mt-10 text-zinc-600'>No projects to show yet</h1>
-            )  
+                <h1 className="font-semibold text-xl mt-10 text-zinc-600">No projects to show yet</h1>
             )}
             </div>
+
         </div>
 
         <ProfileFooter/>
 
         {showFollowers && (
             <>
-            <div className="absolute  animate-popping top-[10rem] z-[30] left-[33%] w-[30rem] overflow-hidden rounded-lg border bg-white shadow-lg">
+            <div className="absolute font-neue  animate-popping top-[10rem] z-[30] left-[33%] w-[30rem] overflow-hidden rounded-lg border bg-white shadow-lg">
                 <div className="border-b px-4 py-2 font-xl font-semibold flex justify-between items-center">
                 <h1>Followers List</h1>
                 <button
@@ -278,41 +299,38 @@ const ProfilePage = () => {
                 </button>
                 </div>
                 <div className="w-full max-h-[15rem]  overflow-y-scroll">
-                {UserFollowers.map((follower, i) => (
-                    <div
-                    key={i}
+                {UserFollowers.map((follower,index) => (
+                <div
+                    key={index}
                     className="flex gap-2 items-center border-b px-5 py-2"
-                    >
+                >
                     <div className="flex justify-between w-full items-center">
-                        <div className="flex gap-2 items-center ">
-                        <div className="w-10 h-10 rounded-full overflow-hidden ">
-                            <img
-                            className="object-cover w-full h-full"
-                            src={`http://localhost:5000/uploads/${follower.profile_image}`}
-                            />
+                    <div className="flex gap-2 items-center">
+                        <div className="w-10 h-10 rounded-full overflow-hidden">
+                        <Avatar width="36px" height="36px" avatar_url={follower.avatar} username={follower.username}/>
                         </div>
-                        <div className="flex flex-col ">
-                            <button
+                        <div className="flex flex-col items-start">
+                        <button
                             onClick={() => {
-                                setShowFollowers(false);
-                                navigate(`/${follower.username}`);
+                            setShowFollowers(false);
+                            navigate(`/user/${follower.username}`);
                             }}
-                            className="text-[15px] hover:underline font-semibold cursor-pointer"
-                            >
+                            className="text-md hover:underline font-semibold text-zinc-800 cursor-pointer"
+                        >
                             {follower.username}
-                            </button>
-                            <h1 className="text-[12px]">
-                            {follower.firstname}
-                            {follower.lastname}
-                            </h1>
-                        </div>
-                        </div>
-                        <button className=" bg-blue-500 h-[30px] inline-block text-white px-4 rounded-lg">
-                        Follow
                         </button>
+                        <h1 className="text-sm font-semibold text-zinc-600">
+                            {follower.fullName}
+                        </h1>
+                        </div>
                     </div>
+                    <button className="bg-blue-500 h-[30px] inline-block text-white px-4 rounded-lg">
+                        Follow
+                    </button>
                     </div>
+                </div>
                 ))}
+
                 </div>
             </div>
             <div className="absolute top-0 left-0 backdrop-blur-md bg-black z-[25]  h-full w-full opacity-50"></div>

@@ -4,70 +4,79 @@ import Tag from "../models/TagModel.js";
 import Like from "../models/LikeModel.js";
 import Comment from "../models/CommentModel.js";
 import CommentLike from "../models/CommentLikeModel.js";
+import Save from "../models/SavedProjectModel.js";
 
 
 
 export const getAllProjects = async (req, res) => {
   try {
-    const userId = req.user?.userId;  // Get user ID from request
-    console.log(userId);
+    const userId = req.user?.userId;
     const projects = await Project.find({ isHidden: false })
       .populate("AuthorId", "username avatar isVerified")
       .populate("collaborators.userId", "username avatar")
       .sort({ createdAt: -1 });
 
-    // Fetch project IDs
     const projectIds = projects.map((project) => project._id);
 
-    // Fetch tags for each project
-    const projectTags = await ProjectTag.find({ projectId: { $in: projectIds } })
-      .populate("tagId", "name");
-
-    // Fetch like counts for each project
-    const likeCounts = await Like.aggregate([
-      { $match: { projectId: { $in: projectIds } } },
-      { $group: { _id: "$projectId", count: { $sum: 1 } } },
+    const [projectTags, likeCounts, userLikes, commentCounts, savedCounts, userSaves] = await Promise.all([
+      ProjectTag.find({ projectId: { $in: projectIds } }).populate("tagId", "name"),
+      Like.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } }
+      ]),
+      userId ? Like.find({ projectId: { $in: projectIds }, userId }).select("projectId") : [],
+      Comment.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } }
+      ]),
+      Save.aggregate([
+        { $match: { projectId: { $in: projectIds } } },
+        { $group: { _id: "$projectId", count: { $sum: 1 } } }
+      ]),
+      userId ? Save.find({ projectId: { $in: projectIds }, userId }).select("projectId") : []
     ]);
 
-    // Fetch user's liked projects
-    const userLikes = userId
-      ? await Like.find({ projectId: { $in: projectIds }, userId }).select("projectId")
-      : [];
-      console.log(userLikes)
-
-    // Map like counts to corresponding projects
     const likeCountMap = {};
     likeCounts.forEach(({ _id, count }) => {
       likeCountMap[_id.toString()] = count;
     });
 
-    // Map user's liked projects
-    const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
+    const commentCountMap = {};
+    commentCounts.forEach(({ _id, count }) => {
+      commentCountMap[_id.toString()] = count;
+    });
 
-    // Map tags to corresponding projects
+    const savedCountMap = {};
+    savedCounts.forEach(({ _id, count }) => {
+      savedCountMap[_id.toString()] = count;
+    });
+
+    const userLikedSet = new Set(userLikes.map((like) => like.projectId.toString()));
+    const userSavedSet = new Set(userSaves.map((save) => save.projectId.toString()));
+
     const tagsMap = {};
     projectTags.forEach((projectTag) => {
-      const projectIdStr = projectTag.projectId.toString();
-      if (!tagsMap[projectIdStr]) tagsMap[projectIdStr] = [];
+      const id = projectTag.projectId.toString();
+      if (!tagsMap[id]) tagsMap[id] = [];
 
-      if (projectTag.tagId && projectTag.tagId.name) {
+      if (projectTag.tagId?.name) {
         projectTag.tagId.name.split(",").forEach((part) => {
           const trimmed = part.trim();
-          if (trimmed) tagsMap[projectIdStr].push(trimmed);
+          if (trimmed) tagsMap[id].push(trimmed);
         });
       }
     });
 
-    // Attach tags, likeCount, and isLiked to projects
     const projectsWithDetails = projects.map((project) => {
-      const projectObj = project.toObject();
       const projectId = project._id.toString();
-
       return {
-        ...projectObj,
+        ...project.toObject(),
         tags: tagsMap[projectId] || [],
-        likeCount: likeCountMap[projectId] || 0, // Default to 0 if no likes
-        isLiked: userLikedSet.has(projectId), // Check if user has liked the project
+        likeCount: likeCountMap[projectId] || 0,
+        commentCount: commentCountMap[projectId] || 0,
+        savedCount: savedCountMap[projectId] || 0,
+        isLiked: userLikedSet.has(projectId),
+        isSaved: userSavedSet.has(projectId),
       };
     });
 
@@ -82,6 +91,52 @@ export const getAllProjects = async (req, res) => {
   }
 };
 
+
+export const getProject = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    const projectId = req.params.projectId;
+    // console.log("user here-->",userId);
+    // console.log("project here-->",projectId);
+    
+    const project = await Project.findById({_id:projectId})
+      .populate("AuthorId", "username avatar isVerified")
+      .populate("collaborators.userId", "username avatar")
+      
+
+    // Fetch tags for each project
+    const projectTags = await ProjectTag.find({projectId})
+      .populate("tagId", "name");
+      
+      // Fetch like counts for each project
+      const likeCount = await Like.aggregate([
+        { $match: { _id: projectId} },
+        { $group: { _id: projectId, count: { $sum: 1 } } },
+      ]);
+      
+      // Fetch user's liked projects
+      const userLikes = userId? await Like.find({ projectId, userId }).select("projectId")
+      : [];
+      
+    const projectObj = project.toObject();
+    const projectsWithDetails = {
+        ...projectObj,
+        tags: projectTags.map(pt => pt.tagId?.name.split(",").map(tag => tag.trim())).flat() || [],
+        likeCount: likeCount || 0, // Default to 0 if no likes
+        isLiked: userLikes, // Check if user has liked the project
+      }
+
+      console.log(projectsWithDetails)
+    res.status(200).json(projectsWithDetails);
+  } catch (error) {
+    console.error("Error fetching home feed projects:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch projects",
+      error: error.message,
+    });
+  }
+};
 export const createProject = async (req, res) => {
   console.log(req.body);
   try {
@@ -218,75 +273,6 @@ export const unlikeProject = async (req, res) => {
   }
 };
 
-export const getProject = async (req, res) => {
-  try {
-    const userId = req.user?.userId;
-    const projectId = req.params.projectId;
-    // console.log("user here-->",userId);
-    // console.log("project here-->",projectId);
-    
-    const project = await Project.findById({_id:projectId})
-      .populate("AuthorId", "username avatar isVerified")
-      .populate("collaborators.userId", "username avatar")
-      
-
-    // Fetch tags for each project
-    const projectTags = await ProjectTag.find({projectId})
-      .populate("tagId", "name");
-      
-      // Fetch like counts for each project
-      const likeCount = await Like.aggregate([
-        { $match: { _id: projectId} },
-        { $group: { _id: projectId, count: { $sum: 1 } } },
-      ]);
-      
-      // Fetch user's liked projects
-      const userLikes = userId? await Like.find({ projectId, userId }).select("projectId")
-      : [];
-      
-    const projectObj = project.toObject();
-    const projectsWithDetails = {
-        ...projectObj,
-        tags: projectTags.map(pt => pt.tagId?.name.split(",").map(tag => tag.trim())).flat() || [],
-        likeCount: likeCount || 0, // Default to 0 if no likes
-        isLiked: userLikes, // Check if user has liked the project
-      }
-
-      console.log(projectsWithDetails)
-    res.status(200).json(projectsWithDetails);
-  } catch (error) {
-    console.error("Error fetching home feed projects:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch projects",
-      error: error.message,
-    });
-  }
-};
-
-export const updateProject = async (req, res) => {
-    try {
-        const updatedProject = await Project.findByIdAndUpdate(
-            req.params.projectId,
-            req.body,
-            { new: true }
-        );
-        if (!updatedProject) return res.status(404).json({ error: "Project not found" });
-        res.status(200).json(updatedProject);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to update project" });
-    }
-};
-export const deleteProject = async (req, res) => {
-    try {
-        const deletedProject = await Project.findByIdAndDelete(req.params.projectId);
-        if (!deletedProject) return res.status(404).json({ error: "Project not found" });
-        res.status(200).json({ message: "Project deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ error: "Failed to delete project" });
-    }
-};
-
 //same for comment and reply
 export const addComment = async (req, res) => {
     try {
@@ -320,7 +306,6 @@ export const addComment = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
 export const getParentComments = async (req, res) => {
   try {
       const { projectId } = req.params;
@@ -361,6 +346,74 @@ export const getParentComments = async (req, res) => {
       res.status(200).json(formattedComments);
   } catch (error) {
       res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
+//for saving projects
+export const saveProject = async (req, res) => {
+  try {
+    const userId = req.user?.userId; // From auth middleware
+    const { projectId } = req.params;
+    
+    // Prevent duplicate save
+    const alreadySaved = await Save.findOne({ userId, projectId });
+    if (alreadySaved) {
+      return res.status(400).json({ success: false, message: "Project already saved" });
+    }
+
+    // Save the project
+    const newSave = new Save({ userId, projectId });
+    await newSave.save();
+
+    res.status(201).json({ success: true, message: "Project saved successfully" });
+  } catch (error) {
+    console.error("Error saving project:", error);
+    res.status(500).json({ success: false, message: "Failed to save project" });
+  }
+};
+export const unsaveProject = async (req, res) => {
+  try {
+    const userId = req.user?.userId; // From auth middleware
+    const { projectId } = req.params;
+
+    const deleted = await Save.findOneAndDelete({ userId, projectId });
+
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: "Save not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Project unsaved successfully" });
+  } catch (error) {
+    console.error("Error unsaving project:", error);
+    res.status(500).json({ success: false, message: "Failed to unsave project" });
+  }
+};
+
+
+
+
+//⚠️ not working or tested
+
+export const updateProject = async (req, res) => {
+  try {
+      const updatedProject = await Project.findByIdAndUpdate(
+          req.params.projectId,
+          req.body,
+          { new: true }
+      );
+      if (!updatedProject) return res.status(404).json({ error: "Project not found" });
+      res.status(200).json(updatedProject);
+  } catch (error) {
+      res.status(500).json({ error: "Failed to update project" });
+  }
+};
+export const deleteProject = async (req, res) => {
+  try {
+      const deletedProject = await Project.findByIdAndDelete(req.params.projectId);
+      if (!deletedProject) return res.status(404).json({ error: "Project not found" });
+      res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ error: "Failed to delete project" });
   }
 };
 
