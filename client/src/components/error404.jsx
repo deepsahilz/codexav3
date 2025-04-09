@@ -5,6 +5,7 @@ const NotFoundPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 font-rejouice">
       <div className="text-center">
         <img className='mx-auto w-10 h-10 mb-10' src='../src/assets/images/emoji1.png'></img>
+        <h1 className="text-5xl font-bold text-gray-800 mb-2">404</h1>
         <h1 className="text-5xl font-bold text-gray-800 mb-2">Oops, page not found</h1>
         <p className="text-gray-600 mb-6 text-[15px] max-w-[27rem]">
           We are very sorry for the inconvenience. It looks like you're trying to access a page that has been deleted or never even existed.

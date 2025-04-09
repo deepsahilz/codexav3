@@ -19,6 +19,7 @@ import PageLoader from './components/PageLoader'
 import LandingPagex from './components/LandingPagex'
 import { AnimatePresence } from 'framer-motion'
 import LandingPage1 from './components/LandingPage1'
+import AdminPage from './pages/AdminPage'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -46,6 +47,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/*" element={<Error404 />} />
 
+          <Route path="/admin" element={<AdminPage />} />
           <Route element={<Layout />}>
             <Route path="/dev" element={<ChatPage />} />
             <Route path="/" element={<LandingPage1 />} />
