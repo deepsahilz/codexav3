@@ -31,12 +31,11 @@ router.get("/:username",verifyToken, getUserProfile); // ✔️Get user profile
 router.post("/:username", verifyToken, updateUser); // ✔️Update user
 router.delete("/:userId", verifyToken, deleteUser); // Delete user
 
-
-router.post("/:userId/follow", verifyToken, followUser); // Follow a user
-router.delete("/:userId/follow", verifyToken, unfollowUser); // Unfollow a user
-
-router.get("/:username/followers", getFollowers); // Get user's followers
-router.get("/:username/following", getFollowing); // Get user's following list
+//follow routes working
+router.post("/:userId/follow", verifyToken, followUser); //✅ Follow a user
+router.delete("/:userId/follow", verifyToken, unfollowUser); //✅ Unfollow a user
+router.get("/:username/followers", getFollowers); //✅ Get user's followers
+router.get("/:username/following", getFollowing); //✅ Get user's following list
 
 
 

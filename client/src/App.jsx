@@ -20,8 +20,11 @@ import LandingPagex from './components/LandingPagex'
 import { AnimatePresence } from 'framer-motion'
 import LandingPage1 from './components/LandingPage1'
 import AdminPage from './pages/AdminPage'
+import { io } from 'socket.io-client'
+import useSocket from './utils/socketService'
 
 function App() {
+  console.log("App component rendered");
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -38,6 +41,23 @@ function App() {
       return () => window.removeEventListener("load", handleLoad);
     }
   }, []);
+
+
+  //SOCKET
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('connect', () => {
+      console.log("connected at client");
+    });
+
+    return () => {
+      socket.off('some-event'); // Clean up specific event listener
+    };
+  }, [socket]);
+
 
   return (
     <>

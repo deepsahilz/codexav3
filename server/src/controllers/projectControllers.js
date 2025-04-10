@@ -126,7 +126,7 @@ export const getProject = async (req, res) => {
         isLiked: userLikes, // Check if user has liked the project
       }
 
-      console.log(projectsWithDetails)
+      // console.log(projectsWithDetails)
     res.status(200).json(projectsWithDetails);
   } catch (error) {
     console.error("Error fetching home feed projects:", error);
@@ -138,7 +138,7 @@ export const getProject = async (req, res) => {
   }
 };
 export const createProject = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const { 
       title, 
@@ -237,7 +237,7 @@ export const likeProject = async (req, res) => {
     try {
         const {projectId } = req.params;
         const userId = req.user.userId;
-        console.log(projectId,userId);
+        // console.log(projectId,userId);
 
         // Check if the like already exists
         const existingLike = await Like.findOne({ userId, projectId });

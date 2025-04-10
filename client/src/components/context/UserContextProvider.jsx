@@ -9,12 +9,12 @@ export const UserContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
+  console.log("rendering user context")
   useEffect(() => {
     const checkAuth = async() => {
         try {
             const response = await axiosInstance.get("/api/auth/me");
-            console.log("From context",response.data)
+            // console.log("From context",response.data)
             setUser(response.data);
             setIsLoggedIn(true);
         } catch(e){
@@ -23,7 +23,7 @@ export const UserContextProvider = ({ children }) => {
         }
     };
       checkAuth();
-}, [isLoggedIn,navigate]);
+}, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, loading, isLoggedIn,setIsLoggedIn }}>

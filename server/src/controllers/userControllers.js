@@ -231,7 +231,6 @@ export const getUserSavedProjects = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    console.log("reached")
     const { username } = req.params;
 
     // Verify user is updating their own profile
@@ -240,7 +239,6 @@ export const updateUser = async (req, res) => {
     }
 
     // Handle file upload if there is a file
-    console.log("1");
     try {
       await handleProfilePicUpload(req, res);
     } catch (uploadError) {
@@ -321,7 +319,6 @@ export const updateUser = async (req, res) => {
 export const getSearchHistory = async (req, res) => {
   try {
       const userId = req.user.userId;
-      console.log("here bro here------->:",userId);
       const user = await User.findById(userId);
       if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -459,11 +456,9 @@ export const unfollowUser = async (req, res) => {
 
         // Find and delete the follow entry
         const deletedFollow = await Follow.findOneAndDelete({ followerId: currentUserId, followingId: userId });
-        console.log("1")
         if (!deletedFollow) {
             return res.status(400).json({ error: "You are not following this user" });
         }
-        console.log("2")
 
         res.status(200).json({ message: "Unfollowed successfully" });
 

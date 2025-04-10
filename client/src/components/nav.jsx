@@ -14,10 +14,30 @@ import edit_icon from "../assets/images/edit_icon.svg";
 import SearchBar from "./SearchBar.jsx";
 import NavLink1 from "./NavLink1.jsx";
 import CodexaLogo from "../assets/images/Logo-1.png"
+import { io } from "socket.io-client";
+
+
 
 
 
 const Nav = () => {
+  useEffect(() => {
+    const socket = io("http://localhost:5000", {
+      withCredentials: true,
+    });
+
+    // Listening for notifications
+    socket.on("notification", (data) => {
+      console.log("hi");
+      console.log("🚨 New Notification:", data.message);
+      // You can display a toast or update the UI here
+    });
+
+    // Cleanup the socket connection when component unmounts
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const navigate = useNavigate();
   const { user,setIsLoggedIn,isLoggedIn } = useUserContext();
   const { username } = useParams();
