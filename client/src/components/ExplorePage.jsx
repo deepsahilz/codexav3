@@ -14,7 +14,7 @@ const ExplorePage = () => {
         setLoading(true);
           try{
           const response = await axiosInstance.get("/api/project")
-          console.log(response.data);
+          // console.log(response.data);
           setFeedData(response.data)
       }catch(e){
         console.log(e)

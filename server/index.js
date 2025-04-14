@@ -20,23 +20,16 @@ import searchRoutes from "./src/routes/searchRoutes.js";
 import suggestRoutes from "./src/routes/suggestRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 import errorMiddleware from "./src/middlewares/errorMiddleware.js"
+import {initSocket,getIO} from "./socket.js";
 
 
 const app = express();
 
 //SOCKETS
 const server = createServer(app);
-const io = new Server(server,{
-  cors:{
-    origin:"http://localhost:5173",
-    methods:["GET","POST"],
-    credentials:true,
-  }
-});
-io.on("connection",(socket)=>{
-  console.log("User connected:");
-  console.log("Id: ",socket.id);
-})
+initSocket(server);
+const io = getIO();
+
 
 
 const corsOptions = {
@@ -155,5 +148,5 @@ const port = process.env.PORT || 5000;
 //   console.log(`🚀 Server running on http://localhost:${port}`);
 // });
 server.listen(port, () => {
-  console.log(`🚀 Server running with sockets on http://localhost:${port}`);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 });

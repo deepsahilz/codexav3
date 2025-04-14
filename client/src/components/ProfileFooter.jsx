@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUserContext } from './context/UserContextProvider'
+import { useUserContext } from '../context/UserContextProvider'
 
 const ProfileFooter = () => {
     const {user}  = useUserContext();

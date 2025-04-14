@@ -8,7 +8,7 @@ import codexaLogo from "../assets/images/Logo-1.png"
 import loaderIcon from '../assets/images/loader_icon2.svg'
 import googleIcon from '../assets/images/google_icon.svg'
 import axiosInstance from '../utils/axiosInstance';
-import { useUserContext } from './context/UserContextProvider';
+import { useUserContext } from '../context/UserContextProvider';
 import Cookies from 'js-cookie';
 //write logic, if token already there,then redirect
 

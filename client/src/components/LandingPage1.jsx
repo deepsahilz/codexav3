@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import commentIcon from "../assets/images/comment_icon.svg";
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useUserContext } from './context/UserContextProvider';
+import { useUserContext } from '../context/UserContextProvider';
 
 const LandingPage1 = () => {
   const phrases = [
@@ -55,6 +55,7 @@ const LandingPage1 = () => {
     }
   }, [displayedText, isDeleting, phraseIndex, phrases]);
 
+  // if(isLoggedIn===undefined) return null 
   if(isLoggedIn) return <Navigate to="/explore" />
   return (
     <div className=''>

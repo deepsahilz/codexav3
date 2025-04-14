@@ -1,33 +1,37 @@
 import { Server } from "socket.io";
 
-let onlineUsers = new Map();
-let io;  // Declare io outside initSocket
+const onlineUsers = new Map(); // userId -> socketId
+
+let io;
 
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || "http://localhost:5173",
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
+      origin: "*", // You can restrict this to your frontend domain
+      methods: ["GET", "POST"]
+    }
   });
 
   io.on("connection", (socket) => {
-    console.log("⚡ New client connected:", socket.id);
+    console.log("🔄 New client connected:", socket.id);
 
-    socket.on("addUser", (userId) => {
+    // When client sends their userId
+    socket.on("join", (userId) => {
       onlineUsers.set(userId, socket.id);
+      console.log(`🔄 userId "${userId}" connected with socketId "${socket.id}"`);
     });
 
     socket.on("disconnect", () => {
-      for (let [key, value] of onlineUsers.entries()) {
-        if (value === socket.id) onlineUsers.delete(key);
+      for (const [userId, sockId] of onlineUsers.entries()) {
+        if (sockId === socket.id) {
+          onlineUsers.delete(userId);
+          console.log(`User ${userId} disconnected`);
+          break;
+        }
       }
     });
   });
-
-  return { io, onlineUsers };
 };
 
-// Make io and onlineUsers accessible
-export { io, onlineUsers };
+export const getIO = () => io;
+export const getOnlineUsers = () => onlineUsers;

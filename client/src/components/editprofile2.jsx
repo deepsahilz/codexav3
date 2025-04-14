@@ -4,7 +4,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import { useNavigate, useParams } from "react-router-dom";
 import Avatar from "./Avatar";
 import TagsInput from "./TagsInput.jsx";
-import { useUserContext } from "./context/UserContextProvider";
+import { useUserContext } from "../context/UserContextProvider.jsx";
 import edit_pencil from "../assets/images/edit_pencil.svg";
 
 const EditProfile = () => {

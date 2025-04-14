@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { useUserContext } from "./context/UserContextProvider";
+import { useUserContext } from "../context/UserContextProvider";
 
 const CommentBar = ({placeholder,projectId,commentId,setComments}) => {
   const [newComment, setNewComment] = useState("");

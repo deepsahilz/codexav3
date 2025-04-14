@@ -11,7 +11,9 @@ import {
     addSearchHistory,
     removeSearchHistoryItem,
     getSearchHistory,
-    getUserSavedProjects
+    getUserSavedProjects,
+    getNotifications,
+    markAllAsRead
 } from "../controllers/userControllers.js";
 import verifyToken from "../middlewares/authMiddleware.js";
 import User from "../models/UserModel.js";
@@ -24,6 +26,8 @@ router.get("/search-history", verifyToken, getSearchHistory);
 router.post("/search-history", verifyToken, addSearchHistory); 
 router.delete("/search-history", verifyToken, removeSearchHistoryItem); 
 
+router.get("/notifications", verifyToken,getNotifications); //✅ Get user's notification list
+router.post("/notifications/mark-read", verifyToken,markAllAsRead); //✅ mark all notifications as read
 
 router.get("/:username/projects", verifyToken, getUserProjects); // ✔️fetch user projects
 router.get("/:username/saved-projects", verifyToken, getUserSavedProjects); // ✔️fetch user projects
@@ -36,6 +40,8 @@ router.post("/:userId/follow", verifyToken, followUser); //✅ Follow a user
 router.delete("/:userId/follow", verifyToken, unfollowUser); //✅ Unfollow a user
 router.get("/:username/followers", getFollowers); //✅ Get user's followers
 router.get("/:username/following", getFollowing); //✅ Get user's following list
+
+
 
 
 

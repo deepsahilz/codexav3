@@ -8,6 +8,9 @@ import Like from "../models/LikeModel.js";
 import ProjectTag from "../models/ProjectTagModel.js";
 import Comment from "../models/CommentModel.js";
 import Save from "../models/SavedProjectModel.js";
+import Notification from "../models/NotificationModel.js"; 
+import { getIO, getOnlineUsers } from "../../socket.js"; 
+
 
 
 export const getUserProfile = async (req, res) => { 
@@ -226,9 +229,6 @@ export const getUserSavedProjects = async (req, res) => {
   }
 };
 
-
-
-
 export const updateUser = async (req, res) => {
   try {
     const { username } = req.params;
@@ -382,18 +382,7 @@ export const removeSearchHistoryItem = async (req, res) => {
   }
 };
 
-
-export const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.userId);
-        if (!user) return res.status(404).json({ error: "User not found" });
-
-        res.status(200).json({ message: "User deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ error: "Server error" });
-    }
-};
-
+//FOLLOW RELATED ✅4
 export const getFollowers = async (req, res) => {
   try {
     const { username } = req.params;
@@ -410,45 +399,65 @@ export const getFollowers = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-
-
-export const getFollowing = async (req, res) => {
-    try {
-        const { userId } = req.params;
-
-        const following = await Follow.find({ followerId: userId }).populate("followingId", "fullName username avatar");
-
-        res.status(200).json({ following: following.map(f => f.followingId) });
-    } catch (error) {
-        res.status(500).json({ error: "Server error" });
-    }
-};
-
 export const followUser = async (req, res) => {
     try {
-        const { userId } = req.params;
-        const currentUserId = req.user.userId; // From JWT token
-
+        const { userId } = req.params;  // User B
+        const currentUserId = req.user.userId;  // From JWT token (User A)
+        // Prevent following yourself
         if (userId === currentUserId) {
             return res.status(400).json({ error: "You cannot follow yourself" });
         }
 
+        // Check if already following
         const existingFollow = await Follow.findOne({ followerId: currentUserId, followingId: userId });
         if (existingFollow) {
             return res.status(400).json({ error: "Already following this user" });
         }
-
         // Create new follow entry
         const newFollow = new Follow({ followerId: currentUserId, followingId: userId });
         await newFollow.save();
+        
+        // Check for an existing follow notification
+        const existingNotification = await Notification.findOne({
+          senderId: currentUserId,
+          recieverId: userId,
+          type: "follow",
+        }).sort({ createdAt: -1 });
 
+        if (existingNotification) {
+            const timeDifference = new Date() - existingNotification.createdAt;
+            if (timeDifference < 60000) { // If less than 1 minute (60000 ms)
+                return res.status(200).json({ message: "Follow action too quick. No notification sent." });
+            }
+        }
+        // Create a new follow notification for User B if it's been more than a minute
+        const notification = new Notification({
+            recieverId: userId,
+            senderId: currentUserId,
+            type: "follow",
+            message: `${currentUserId} followed you`,
+        });
+        await notification.save();
+
+        // Emit a real-time notification if User B is online
+        const onlineUsers = getOnlineUsers();
+        if (onlineUsers.has(userId)) {
+            const userSocketId = onlineUsers.get(userId);
+            const io = getIO();
+            console.log("emitting follow notification to",userSocketId);
+            io.to(userSocketId).emit("new-notification", {
+                message: `${currentUserId} followed you`,
+                type: "follow",
+            });
+        }
+
+        // Return success response
         res.status(200).json({ message: "Followed successfully" });
     } catch (error) {
+      console.log(error);
         res.status(500).json({ error: "Server error" });
     }
 };
-
 export const unfollowUser = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -467,3 +476,57 @@ export const unfollowUser = async (req, res) => {
     }
 };
 
+//NOTIFICATIONS ✅1
+export const getNotifications = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const notifications = await Notification.find({ recieverId: userId })
+      .populate("senderId", "username avatar")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(notifications);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+export const markAllAsRead = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    await Notification.updateMany(
+      { recieverId: userId, isRead: false },
+      { $set: { isRead: true } }
+    );
+
+    res.status(200).json({ message: "All notifications marked as read" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+export const deleteUser = async (req, res) => {
+  try {
+      const user = await User.findByIdAndDelete(req.params.userId);
+      if (!user) return res.status(404).json({ error: "User not found" });
+
+      res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ error: "Server error" });
+  }
+};
+export const getFollowing = async (req, res) => {
+  try {
+      const { userId } = req.params;
+
+      const following = await Follow.find({ followerId: userId }).populate("followingId", "fullName username avatar");
+
+      res.status(200).json({ following: following.map(f => f.followingId) });
+  } catch (error) {
+      res.status(500).json({ error: "Server error" });
+  }
+};

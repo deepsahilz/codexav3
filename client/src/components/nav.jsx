@@ -2,7 +2,7 @@ import React, {useEffect,useState } from "react";
 import { NavLink,  useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import { useUserContext } from "./context/UserContextProvider";
+import { useUserContext } from "../context/UserContextProvider.jsx";
 import axiosInstance from "../utils/axiosInstance.js";
 import NavModal from "./NavModal";
 import AddProject from "./AddProject";
@@ -15,54 +15,48 @@ import SearchBar from "./SearchBar.jsx";
 import NavLink1 from "./NavLink1.jsx";
 import CodexaLogo from "../assets/images/Logo-1.png"
 import { io } from "socket.io-client";
-
+import Notifications from "./Notifications"
+import { useSocket } from "../context/SocketContext.jsx";
 
 
 
 
 const Nav = () => {
-  useEffect(() => {
-    const socket = io("http://localhost:5000", {
-      withCredentials: true,
-    });
 
-    // Listening for notifications
-    socket.on("notification", (data) => {
-      console.log("hi");
-      console.log("🚨 New Notification:", data.message);
-      // You can display a toast or update the UI here
-    });
-
-    // Cleanup the socket connection when component unmounts
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-  const navigate = useNavigate();
-  const { user,setIsLoggedIn,isLoggedIn } = useUserContext();
-  const { username } = useParams();
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm();
   
+  const navigate = useNavigate();
+  const{notifications,setNotifications} = useSocket();
+  const { user,setIsLoggedIn,isLoggedIn,setUser } = useUserContext();
+  const {register,setValue,handleSubmit,watch,formState: { errors, isSubmitting },} = useForm();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+  
 
-  const suggestionData = [
-    "React",
-    "Node.js",
-    "TailwindCSS",
-    "Express",
-    "JavaScript",
-  ];
+  //USE-EFFECT TO MARK READ ALL MESSAGES WHEN OPEN
+  useEffect(() => {
+    const markAllAsRead = async () => {
+      const hasUnread = notifications.some(n => !n.isRead);
+      if (!hasUnread) return;
+  
+      try {
+        await axiosInstance.post("/api/user/notifications/mark-read");
+        //problem is here
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      } catch (err) {
+        console.error("Failed to mark notifications read", err);
+      }
+    };
+  
+    if (showNotifs) {
+      markAllAsRead();
+    }
+  }, [showNotifs]);
+  
+  
+
   const chatMessages = [
     {
       username: "gwen stacy",
@@ -108,28 +102,17 @@ const Nav = () => {
     },
   ];
 
-  //search suggestion click
-  const handleSuggestionClick = (suggestion) => {
-    setValue("search", suggestion);
-    setShowSuggestions(false);
-  };
-
-  //search logic
-  const handleSearch = async (data) => {
-    await axios.post("/api/search", data).then((response) => {
-      console.log(response.data);
-    });
-  };
-
+  //HANDLE LOGOUT
   const handleLogout = async () => {
-    const response = await axiosInstance.post("/api/auth/logout")
+    const response = await axiosInstance.post("/api/auth/logout",{
+      showToast:true,
+      toastMessage:"successfully logged out"})
+
     setIsLoggedIn(false);
+    setUser("");
     setShowOptions(false);
     navigate("/");
-    toast.success("successfully logout",{position: "bottom-right",
-    autoClose: 3000,})
   };
-
 
   return (
     <div className="top-0 left-0 sticky z-[50] w-full font-nb">
@@ -310,17 +293,19 @@ const Nav = () => {
                       <path d="M10.1 5.37363C10.3629 4.57586 11.1142 4 12 4C12.8858 4 13.6371 4.57586 13.9 5.37363C15.7191 6.12152 17 7.91118 17 10V14L19.1464 16.1464C19.4614 16.4614 19.2383 17 18.7928 17H5.20706C4.76161 17 4.53852 16.4614 4.8535 16.1464L7 14V10C7 7.91118 8.28088 6.12152 10.1 5.37363Z" />
                       <path d="M10 18C10 19.1046 10.8954 20 12 20C13.1046 20 14 19.1046 14 18H10Z" />
                     </svg>
-
+                    {notifications.filter(n => !n.isRead).length>0&&
                     <div className="bg-red-500 w-4 h-4 rounded-full absolute -top-[6px] -right-[5px] text-[10px] flex justify-center items-center font-semibold">
-                      2
-                    </div>
+                      {notifications.filter(n => !n.isRead).length}
+                    </div>}
                   </div>
                   {showNotifs&&<NavModal className="w-[20rem] -right-[77px] ">
-                  <div className="text-zinc-700 mt-1">
+                  
+                  {/* <div className="text-zinc-700 mt-1">
                     <h1 className="font-semibold">Your Notifications</h1>
                     <div className="p-4"></div>
+                  </div> */}
+                  <Notifications/>
 
-                  </div>
                   </NavModal>}
 
                 </div>
