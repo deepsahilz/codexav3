@@ -23,7 +23,7 @@ const Avatar = ({
   return (
     <div
       className={`flex items-center justify-center font-neue text-white text-opacity-60 font-bold ${rounded ? "rounded-full overflow-hidden" : ""} ${showBorder ? "border border-gray-300" : ""} ${className}`}
-      style={{ width, height, backgroundColor: !avatar_url ? getRandomColor(username) : "transparent" }}
+      style={{ width, height,minWidth:width, backgroundColor: !avatar_url ? getRandomColor(username) : "transparent" }}
     >
       {avatar_url ? (
         <img

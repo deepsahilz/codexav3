@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 // import Buttonx from './buttonx'
 import { Link, Navigate } from 'react-router-dom';
-import { useUserContext } from './context/UserContextProvider';
+import { useUserContext } from '../context/UserContextProvider';
 
 
 const flexdata =[

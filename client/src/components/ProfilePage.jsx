@@ -4,7 +4,7 @@ import bell_icon from "../assets/images/bellIcon.svg";
 import bell_off from "../assets/images/bell-off.svg";
 import axios from 'axios';
 import { Link, NavLink, redirect, useNavigate, useParams } from 'react-router-dom';
-import { useUserContext } from './context/UserContextProvider';
+import { useUserContext } from '../context/UserContextProvider.jsx';
 import ProfileFooter from './ProfileFooter';
 import axiosInstance from '../utils/axiosInstance.js';
 import ProjectGrid from './ProjectGrid';
@@ -118,7 +118,7 @@ const ProfilePage = () => {
     useEffect(()=>{
         async function fetchdata(){
             const response  = await axiosInstance.get(`/api/user/${username}`);
-            console.log("From profile",response.data)
+            // console.log("From profile",response.data)
             setUserData(response.data);
             setLoading(false);
         }

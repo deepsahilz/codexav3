@@ -2,7 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+//new for sockets
+import { createServer } from "http";
+import { Server } from "socket.io";
 // Load environment variables first
 dotenv.config();
 
@@ -18,13 +20,18 @@ import searchRoutes from "./src/routes/searchRoutes.js";
 import suggestRoutes from "./src/routes/suggestRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 import errorMiddleware from "./src/middlewares/errorMiddleware.js"
-
-
-
-
+import {initSocket,getIO} from "./socket.js";
 
 
 const app = express();
+
+//SOCKETS
+const server = createServer(app);
+initSocket(server);
+const io = getIO();
+
+
+
 const corsOptions = {
   origin: process.env.CLIENT_URL || "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -55,7 +62,7 @@ app.use("/api/user", userRoutes);
 //GET    -->api/user/:userId/following    ✅ get user's following
 //POST   -->api/user/:userId/follow       ✅ follow user 
 //DELETE -->api/user/:userId/follow       ✅ unfollow user
-//GET    -->api/user/:userId/projects        get all projects of user(with preview,likeCount,commentCount,Tags)
+//GET    -->api/user/:userId/projects     ✅ get all projects of user(with preview,likeCount,commentCount,Tags)
 
 app.use("/api/tags", tagRoutes);     
 app.use('/api/utils', utilRoutes);
@@ -134,8 +141,12 @@ app.use("/api/comment", commentRoutes);
 // Error Middleware (Must be last)
 app.use(errorMiddleware);
 
+
 // Start server
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+// app.listen(port, () => {
+//   console.log(`🚀 Server running on http://localhost:${port}`);
+// });
+server.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });

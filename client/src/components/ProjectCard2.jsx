@@ -14,7 +14,7 @@ import TagList from './TagList.jsx'
 const ProjectCard = ({project,...props}) => {
     const [isLiked, setIsLiked] = useState(project.isLiked || false);
     const [isSaved, setIsSaved] = useState(project.isSaved || false);
-
+    const [likeLoading,setLikeLoading]=useState(false)
     const [likeCount, setLikeCount] = useState(project.likeCount || 0);
     const [saveCount, setSaveCount] = useState(project.savedCount || 0);
     const navigate= useNavigate();
@@ -22,14 +22,22 @@ const ProjectCard = ({project,...props}) => {
 
     //like functions
     const toggleLike = async () => {
-        if (isLiked) {
-            await handleUnlike();
-            setLikeCount(likeCount - 1);
-        } else {
-            await handleLike();
-            setLikeCount(likeCount + 1);
+        if (likeLoading) return;
+        setLikeLoading(true);
+        try {
+            if (isLiked) {
+                await handleUnlike();
+                setLikeCount(likeCount - 1);
+            } else {
+                await handleLike();
+                setLikeCount(likeCount + 1);
+            }
+            setIsLiked(!isLiked);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLikeLoading(false);
         }
-        setIsLiked(!isLiked);
     };
     const handleLike = async () => {
         try {
@@ -109,7 +117,8 @@ const ProjectCard = ({project,...props}) => {
                 <div className='flex gap-3'>
 
                 <div className='flex items-end gap-[5px] justify-end'>
-                    <button  onClick={toggleLike}>
+                <button onClick={toggleLike} disabled={likeLoading} className={`${likeLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+
                         {isLiked?(  
                             <svg className='w-[18px] h-[18px]' width="800px" height="800px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">

@@ -5,7 +5,7 @@ import searchIcon from "../assets/images/searchIcon.svg";
 import recentIcon from "../assets/images/recent.svg";
 import trendingIcon from "../assets/images/trending.svg";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "./context/UserContextProvider";
+import { useUserContext } from "../context/UserContextProvider.jsx";
 
 // import svj from "" yes i can see you you
 
@@ -46,7 +46,7 @@ const SearchBar = () => {
   
       try {
         const { data } = await axiosInstance.get(`/api/suggest/project?query=${searchTerm}`);
-        console.log(data);
+        // console.log(data);
         setSuggestions(data);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -99,7 +99,7 @@ const handleSearch=(query)=>{
 const fetchSearchHistory = async () => {
   try {
       const response = await axiosInstance.get(`api/user/search-history`);
-      console.log(response.data);
+      // console.log(response.data);
       setSearchHistory(response.data.searchHistory || []);
   } catch (error) {
       console.error("Failed to fetch search history", error);
@@ -116,7 +116,7 @@ const addSearchHistory = async (searchTerm) => {
 };
 const handleRemoveSearch = async (searchTerm) => {
   try {
-    console.log("to delete: ",searchTerm)
+    // console.log("to delete: ",searchTerm)
       await axiosInstance.delete(`api/user/search-history`, { data: { searchTerm } });
       fetchSearchHistory(); 
   } catch (error) {
@@ -219,7 +219,7 @@ const renderModalContent = () => {
   return (
     <div className="w-[24rem]">
     <form 
-    onSubmit={handleSubmit(() => console.log("Search submitted"))}
+    onSubmit={handleSubmit}
     ref={searchRef}
     className="relative flex items-center bg-zinc-800 backdrop-blur-md shadow-lg rounded-full 
     border border-zinc-600 w-full">

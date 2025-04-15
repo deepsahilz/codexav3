@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useUserContext } from './context/UserContextProvider';
+import { useUserContext } from '../context/UserContextProvider';
 
 const LandingPage = () => {
   const { isLoggedIn,loading } = useUserContext();

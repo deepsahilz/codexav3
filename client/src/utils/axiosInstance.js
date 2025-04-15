@@ -35,15 +35,17 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.log("bro error here--->",error);
+        // console.log("bro error here--->",error);
         if (error.message === "No internet connection") return Promise.reject(error);
     
         if (error.response) {
             // Suppress toast only for /auth/me errors on specific pages
-            if (error.config?.url === "/api/auth/me" && isAuthCheckRoute()) {
-                return Promise.reject(error);
-            }
-            toast.error(error.response.data?.message || "Something went wrong!");
+            // if (error.config?.url === "/api/auth/me" && isAuthCheckRoute()) {
+            //     return Promise.reject(error);
+            // }
+            console.log("something went wrong")
+            const errorMessge  = error.response.data?.message || "Something went wrong!" 
+            toast.error(errorMessge);
         } else {
             toast.error("Server unreachable. Please try again later.");
         }

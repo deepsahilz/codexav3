@@ -5,6 +5,9 @@ import Like from "../models/LikeModel.js";
 import Comment from "../models/CommentModel.js";
 import CommentLike from "../models/CommentLikeModel.js";
 import Save from "../models/SavedProjectModel.js";
+import Notification from "../models/NotificationModel.js"; 
+import { getIO, getOnlineUsers } from "../../socket.js"; 
+
 
 
 
@@ -90,8 +93,6 @@ export const getAllProjects = async (req, res) => {
     });
   }
 };
-
-
 export const getProject = async (req, res) => {
   try {
     const userId = req.user?.userId;
@@ -126,7 +127,7 @@ export const getProject = async (req, res) => {
         isLiked: userLikes, // Check if user has liked the project
       }
 
-      console.log(projectsWithDetails)
+      // console.log(projectsWithDetails)
     res.status(200).json(projectsWithDetails);
   } catch (error) {
     console.error("Error fetching home feed projects:", error);
@@ -138,7 +139,7 @@ export const getProject = async (req, res) => {
   }
 };
 export const createProject = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const { 
       title, 
@@ -233,26 +234,95 @@ export const createProject = async (req, res) => {
     });
   }
 };
+
+
+
+
 export const likeProject = async (req, res) => {
-    try {
-        const {projectId } = req.params;
-        const userId = req.user.userId;
-        console.log(projectId,userId);
+  try {
+      const { projectId } = req.params;
+      const userId = req.user.userId;
 
-        // Check if the like already exists
-        const existingLike = await Like.findOne({ userId, projectId });
-        if (existingLike) {
-            return res.status(400).json({ message: "Already liked this project" });
-        }
-        // Create a new like entry
-        const like = new Like({ userId, projectId });
-        await like.save();
+      // Check if the like already exists
+      const existingLike = await Like.findOne({ userId, projectId });
+      if (existingLike) {
+          return res.status(400).json({ message: "Already liked this project" });
+      }
 
-        res.status(201).json({ message: "Project liked successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
+      // Create a new like entry
+      const like = new Like({ userId, projectId });
+      await like.save();
+
+      // Fetch project details to get the thumbnail
+      const project = await Project.findById(projectId);
+
+      if (!project) {
+          return res.status(404).json({ message: "Project not found" });
+      }
+
+      const collaborators = project.collaborators.filter(collaborator => collaborator.status === "accepted");
+
+      // Create notifications for the project owner and accepted collaborators
+      const notifyUsers = [...collaborators.map(collab => collab.userId), project.AuthorId]
+        .filter(id => id.toString() !== userId.toString());
+      for (const user of notifyUsers) {
+          console.log("here-->", user);
+          
+          // Check if a notification exists and if it was sent less than a minute ago
+          const existingNotification = await Notification.findOne({
+              senderId: userId,
+              recieverId: user,
+              type: "like",
+              projectId: projectId,  // Ensure there's no duplicate notification for the same like
+          });
+
+          if (existingNotification) {
+              // Check the time difference between the current time and the existing notification's timestamp
+              const timeDifference = Date.now() - new Date(existingNotification.createdAt).getTime();
+              const oneMinute = 60 * 1000; // 1 minute in milliseconds
+              
+              if (timeDifference < oneMinute) {
+                  // If the last notification was sent less than 1 minute ago, skip sending a new one
+                  console.log("Notification already sent less than a minute ago. Skipping.");
+                  continue;
+              }
+          }
+
+          // Create a new notification if one doesn't exist or is too old
+          const notification = new Notification({
+              recieverId: user,
+              senderId: userId,
+              type: "like",
+              message: `${userId} liked your project ${project.title}`,
+              projectThumbnail: project.thumbnail,  // Attach the project thumbnail
+              projectId: projectId,  // Include projectId in notification
+          });
+          await notification.save();
+
+          // Emit notification if the user is online
+          const onlineUsers = getOnlineUsers();
+          const userIdString = user.toString();
+
+          if (onlineUsers.has(userIdString)) {
+              const userSocketId = onlineUsers.get(userIdString);
+              const io = getIO();
+              console.log("Emitting notification to user:", userIdString, "Socket ID:", userSocketId);
+                io.to(userSocketId).emit("new-notification", {
+                    message: `${userId} liked your project ${project.title}`,
+                    type: "like",
+                    projectThumbnail: project.thumbnail,
+                });
+          }
+      }
+
+      res.status(201).json({ message: "Project liked successfully" });
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
+
+
 export const unlikeProject = async (req, res) => {
   try {
       const { projectId } = req.params;
@@ -418,4 +488,23 @@ export const deleteProject = async (req, res) => {
 };
 
 
+// export const likeProject = async (req, res) => {
+//   try {
+//       const {projectId } = req.params;
+//       const userId = req.user.userId;
+//       // console.log(projectId,userId);
 
+//       // Check if the like already exists
+//       const existingLike = await Like.findOne({ userId, projectId });
+//       if (existingLike) {
+//           return res.status(400).json({ message: "Already liked this project" });
+//       }
+//       // Create a new like entry
+//       const like = new Like({ userId, projectId });
+//       await like.save();
+
+//       res.status(201).json({ message: "Project liked successfully" });
+//   } catch (error) {
+//       res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
