@@ -5,7 +5,7 @@ import cors from "cors";
 //new for sockets
 import { createServer } from "http";
 import { Server } from "socket.io";
-// Load environment variables first
+// Load environment variables firs
 dotenv.config();
 
 import connectDB from "./src/dbconfig/db.js";
@@ -21,6 +21,7 @@ import suggestRoutes from "./src/routes/suggestRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 import errorMiddleware from "./src/middlewares/errorMiddleware.js"
 import {initSocket,getIO} from "./socket.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
 
 
 const app = express();
@@ -55,7 +56,7 @@ app.use("/api/auth", authRoutes);
 //POST--> api/auth/logout   ✅
 
 
-// app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/user", userRoutes);
 //GET    -->api/user/:username            ✅ get user profile

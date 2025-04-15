@@ -40,21 +40,22 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
-const verifyAdmin = async (req, res, next) => {
+export const verifyAdmin = async (req, res, next) => {
     try {
-        const token = req.cookies.token; // Get token from cookies
+        // req.user is set by verifyToken
+        const user = await User.findById(req.user.userId);
 
-        if (!token) {
-            return res.status(401).json({ error: "Unauthorized: No token provided" });
+        if (!user || user.role !== "admin") {
+            return res.status(403).json({ error: "Access denied: Admins only" });
         }
 
-        //check if request user.role === admin, then next, otherwise res error
-
+        next();
     } catch (error) {
-        console.error("Server error during admin verfication:", error);
-        res.status(500).json({ error: "Server error during admin verification" });
+        console.error("Error in verifyAdmin middleware:", error);
+        res.status(500).json({ error: "Server error during admin check" });
     }
 };
+
 
 
 export default verifyToken;

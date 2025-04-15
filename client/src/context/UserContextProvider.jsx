@@ -22,7 +22,7 @@ export const UserContextProvider = ({ children }) => {
               headers: { "Content-Type": "application/json" },
           })
 
-            // console.log("From context",response.data)
+            console.log("From context",response.data)
             setUser(response.data);
             setIsLoggedIn(true);
         }catch(e){

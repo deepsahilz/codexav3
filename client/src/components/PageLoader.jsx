@@ -17,11 +17,11 @@ const PageLoader = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
-      <div className="flex overflow-hidden">
+      <div className="flex gap-1 overflow-hidden">
         {letters.map((letter, index) => (
           <motion.span
             key={index}
-            className="text-4xl font-bold font-rejouice inline-block"
+            className="text-5xl font-bold font-rejouice inline-block"
             initial={{ rotateX: -90, opacity: 0 }}
             animate={{ rotateX: 0, opacity: 1 }}
             transition={{

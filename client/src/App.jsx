@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { UserContextProvider } from "./context/UserContextProvider";
 import { ToastContainer } from "react-toastify";
 import { AnimatePresence } from "framer-motion";
@@ -7,6 +7,11 @@ import { SocketProvider } from "./context/SocketContext";
 
 // Lazy-loaded components
 import React, { Suspense } from "react";
+import AdminProtected from "./components/utils/AdminProtected2";
+import AdminDashboard from "./components/AdminDashboard";
+import AdminNavbar from "./components/AdminNavbar";
+import AdminUsers from "./components/AdminUsers";
+import AdminProjects from "./components/AdminProjects";
 const Error404 = React.lazy(() => import("./components/error404"));
 const Signup = React.lazy(() => import("./components/signup"));
 const Login = React.lazy(() => import("./components/login"));
@@ -24,45 +29,50 @@ const AdminPage = React.lazy(() => import("./pages/AdminPage"));
 const PageLoader = React.lazy(() => import("./components/PageLoader"));
 
 function App() {
-  console.log("Rendering App");
+	console.log("Rendering App");
+	
+	const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const handleLoad = () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1800);
+    };
 
-  // useEffect(() => {
-  //   const handleLoad = () => {
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1500);
-  //   };
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, []);
 
-  //   if (document.readyState === "complete") {
-  //     handleLoad();
-  //   } else {
-  //     window.addEventListener("load", handleLoad);
-  //     return () => window.removeEventListener("load", handleLoad);
-  //   }
-  // }, []);
 
   	return (
 		<>
     	<UserContextProvider>
 		<SocketProvider>
+			
 		<Suspense>
         	<Routes>
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<Signup />} />
 				<Route path="/*" element={<Error404 />} />
 				
-				{/* <Route element={<AdminProtected/>}> */}
-					{/* <Route element={<AdminLayout/>}> */}
-						{/* <Route path="/admin" element={<AdminDashboard />} /> */}
-						{/* <Route path="/admin/users" element={<UserManagement />} /> */}
-						{/* <Route path="/admin/projects" element={<ProjectManagement />} /> */}
-					{/* </Route> */}
-				{/* </Route> */}
-
 				<Route element={<Layout />}>
+
 					<Route path="/" element={<LandingPage1 />} />
 
 					<Route element={<Protectedroutes />}>
+
+						<Route element={<AdminProtected/>}>
+							{/* <Route element={<AdminLayout/>}> */}
+								<Route path="/admin/stats" element={<AdminDashboard />} />
+								<Route path="/admin/users" element={<AdminUsers />} />
+								<Route path="/admin/projects" element={<AdminProjects />} />
+							{/* </Route> */}
+						</Route>
+
 						<Route path="/explore" element={<ExplorePage />} />
 						<Route path="/chat" element={<ChatPage />} />
 						<Route path="/search" element={<SearchPage />} />
@@ -77,9 +87,9 @@ function App() {
 			</Suspense>
 
 			{/* Loader with AnimatePresence to handle exit animations */}
-			{/* <AnimatePresence mode="wait">
+			<AnimatePresence mode="wait">
 			{isLoading && <PageLoader />}
-			</AnimatePresence> */}
+			</AnimatePresence>
 		</SocketProvider>
 		</UserContextProvider>
 

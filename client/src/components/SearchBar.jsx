@@ -217,7 +217,7 @@ const renderModalContent = () => {
   
 
   return (
-    <div className="w-[24rem]">
+    <div className="md:w-[24rem]  xl:w-[33rem]">
     <form 
     onSubmit={handleSubmit}
     ref={searchRef}

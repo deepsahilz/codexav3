@@ -39,6 +39,11 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) return res.status(409).json({ message: "User not found" });
+        
+        if (user.accountStatus === "banned") {
+            return res.status(403).json({ message: "Your account has been banned" });
+        }
+        
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Email or password is incorrect" });
@@ -87,10 +92,10 @@ export const checkAuth = async (req, res) => {
             return res.status(401).json({ message: "Not authenticated" });
         }
 
-        const user = await User.findById(req.user.userId).select("username avatar"); // Fetch user details
+        const user = await User.findById(req.user.userId).select("username avatar role"); // Fetch user details
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.json({ id: user._id, username: user.username, avatar: user.avatar });
+        res.json({ id: user._id, username: user.username, avatar: user.avatar, role:user.role });
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }

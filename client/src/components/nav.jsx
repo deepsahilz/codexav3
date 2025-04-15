@@ -22,8 +22,6 @@ import { useSocket } from "../context/SocketContext.jsx";
 
 
 const Nav = () => {
-
-  
   const navigate = useNavigate();
   const{notifications,setNotifications} = useSocket();
   const { user,setIsLoggedIn,isLoggedIn,setUser } = useUserContext();
@@ -54,8 +52,6 @@ const Nav = () => {
       markAllAsRead();
     }
   }, [showNotifs]);
-  
-  
 
   const chatMessages = [
     {
@@ -118,106 +114,82 @@ const Nav = () => {
     <div className="top-0 left-0 sticky z-[50] w-full font-nb">
       <div className="text-white px-7 bg-black w-full   ">
 
-        <div className="hidden lg:flex justify-between items-center h-[3.6rem]">
+        <div className="hidden lg:flex justify-between items-center h-[3.8rem]">
           <div className="flex gap-10 items-end  h-full">
 
+            {/* logo */}
             <div className="logo h-full mx-auto flex items-center">
-              <a
-                href="/explore"
-                className="text-2xl  font-semibold flex items-center -mt-[3px] font-nb leading-none "
-              >
-                {/* <span className="font-['dubtronic_solid'] mr-1.5">D</span> */}
+              <a href="/explore" className="text-2xl  font-semibold flex items-center -mt-[3px] font-nb leading-none ">
                 <img className="w-[21px] h-[21px] mr-1" src={CodexaLogo}/>
-                Codexa
+                {user?.role==="admin"?"Codexa Admin":"Codexa"}
               </a>
             </div>
 
             {/* navlinks till search */}
             <ul className="flex gap-8 transition-colors h-full ">
+              
               {isLoggedIn && (
                 <li className="h-full flex items-center">
-                  <NavLink
-                    to="/explore"
-                    className="font-medium 
-               block  text-stone-400 hover:text-white "
-                  >
-                    Explore
-                  </NavLink>
-                  {/* <NavLink1 label={item.label} to={item.to} /> */}
+                  <NavLink to="/explore" className="font-medium block  text-stone-400 hover:text-white ">Explore</NavLink>
                 </li>
               )}
 
-              {isLoggedIn && (
+              {isLoggedIn && user?.role==="admin"&& (
                 <li className="h-full flex items-center">
-                  <NavLink
-                    to="/bounties"
-                    className="font-medium 
-               text-stone-400 hover:text-white"
-                  >
-                    Bounties
-                  </NavLink>
+                  <NavLink to="/admin/stats" className="font-medium block  text-stone-400 hover:text-white ">stats</NavLink>
+                </li>
+              )}
+              {isLoggedIn && user?.role==="admin"&& (
+                <li className="h-full flex items-center">
+                  <NavLink to="/admin/users" className="font-medium block  text-stone-400 hover:text-white ">users</NavLink>
+                </li>
+              )}
+              {isLoggedIn && user?.role==="admin"&& (
+                <li className="h-full flex items-center">
+                  <NavLink to="/admin/projects" className="font-medium block  text-stone-400 hover:text-white ">projects</NavLink>
                 </li>
               )}
 
               {/* {isLoggedIn && (
                 <li className="h-full flex items-center">
-                  <NavLink
-                    to="/#"
-                    className="font-medium 
-               text-stone-400 hover:text-white"
-                  >
-                    Communities
-                  </NavLink>
+                  <NavLink to="/bounties" className="font-medium text-stone-400 hover:text-white">Bounties</NavLink>
                 </li>
               )} */}
 
+
               {!isLoggedIn && (
                 <li className="h-full flex items-center">
-                  <a
-                    className="font-medium text-stone-400 hover:text-white  "
-                    href="#"
-                  >
-                    About
-                  </a>
+                  <a className="font-medium text-stone-400 hover:text-white  " href="#">About</a>
                 </li>
               )}
 
               {!isLoggedIn && (
                 <li className="h-full flex items-center">
-                  <a
-                    className="font-medium text-stone-400 hover:text-white  "
-                    href="#"
-                  >
-                    Help
-                  </a>
+                  <a className="font-medium text-stone-400 hover:text-white  " href="#">Help</a>
                 </li>
               )}
 
-              {isLoggedIn &&
-              
-              <li className="h-full flex items-center">
-                <div className="">
+              {isLoggedIn && (
+                <li className="h-full flex items-center">
                   <SearchBar/>
-                </div>
-              </li>}
+              </li>
+            )}
+
             </ul>
           </div>
 
+            {/* user options */}
           {isLoggedIn && (
             <ul className="flex gap-1 items-center h-full ">
-              {/* share project li */}
+
               <li className="h-full flex items-center pr-2">
-                <button
-                  onClick={() => {
-                    setShowAddProjectModal(true);
-                  }}
-                  className="hidden transition-colors xl:block rounded-full border-[2px] font-medium border-stone-500 text-stone-300 px-4 py-[4px] text-[15px] hover:bg-zinc-800 hover:border-stone-400 hover:text-stone-300"
-                >
+                <button onClick={() => {setShowAddProjectModal(true);}}
+                  className="hidden transition-colors xl:block rounded-full border-[2px] font-medium border-stone-500 text-stone-300 px-4 py-[4px] text-[15px] hover:bg-zinc-800 hover:border-stone-400 hover:text-stone-300">
                   Share project
                 </button>
               </li>
 
-              {/* messages li */}
+              {/* inbox */}
               <li className="relative h-full flex items-center">
                 <div className=" cursor-pointer px-2 py-[16px]"
                   onClick={() => {navigate(`/chat`)}}
@@ -242,6 +214,7 @@ const Nav = () => {
                         />
                       </g>
                     </svg>
+
                   {showInbox&&<NavModal  className="w-[20rem] -right-[77px] ">
                   <div className="text-zinc-700  w-full ">
                     <h1 className="font-semibold py-[5px] text-center mb-1">Your messages</h1>
@@ -294,37 +267,26 @@ const Nav = () => {
                       <path d="M10 18C10 19.1046 10.8954 20 12 20C13.1046 20 14 19.1046 14 18H10Z" />
                     </svg>
                     {notifications.filter(n => !n.isRead).length>0&&
-                    <div className="bg-red-500 w-4 h-4 rounded-full absolute -top-[6px] -right-[5px] text-[10px] flex justify-center items-center font-semibold">
-                      {notifications.filter(n => !n.isRead).length}
-                    </div>}
+                    <div className="bg-red-500 w-4 h-4 rounded-full absolute -top-[6px] -right-[5px] text-[10px] flex justify-center items-center font-semibold">{notifications.filter(n => !n.isRead).length}</div>}
                   </div>
-                  {showNotifs&&<NavModal className="w-[20rem] -right-[77px] ">
-                  
-                  {/* <div className="text-zinc-700 mt-1">
-                    <h1 className="font-semibold">Your Notifications</h1>
-                    <div className="p-4"></div>
-                  </div> */}
-                  <Notifications/>
 
-                  </NavModal>}
-
+                  {showNotifs&&(
+                    <NavModal className="w-[20rem] -right-[77px] ">
+                      <Notifications/>
+                    </NavModal>
+                  )}
                 </div>
               </li>
 
-              {/* profile li */}
-              <li
-                className="text-stone-400 relative pl-3  h-full flex items-center "
+              {/* profile */}
+              <li className="text-stone-400 relative pl-3  h-full flex items-center "
                 onMouseEnter={() => {setShowOptions(true);}}
                 onMouseLeave={() => {setShowOptions(false);}}>
-                <button 
-                // onClick={() => {setShowOptions(!showOptions);}}
-                >
+                <button onClick={() => {navigate(`/user/${user.username}`);}}>
                   <div className="flex items-center hover:bg-zinc-800 border border-transparent hover:border-zinc-700 gap-2 font-medium rounded-full ">
                     <div className="rounded-full  h-[32px] w-[32px] ">  
-                      {user&&<Avatar username={user.username} avatar_url={user.avatar} className="text-[14px]"/>
-                      }
+                      {user&&<Avatar username={user.username} avatar_url={user.avatar} className="text-[14px]"/>}
                     </div>
-
                     <div className="max-w-[5rem] pr-2">
                       <h2 className="truncate">{user&&user.username}</h2>
                     </div>
@@ -334,36 +296,24 @@ const Nav = () => {
                 {showOptions && (
                   <NavModal className="-right-0 w-[9rem]">
                     <div className="  text-stone-800  flex flex-col   mt-[10px]">
-                      <button
-                        className=" w-full py-[10px] hover:bg-stone-200 flex items-center px-3 justify-center whitespace-nowrap   capitalize "
-                        onClick={() => {
-                          navigate(`/user/${user.username}`);
-                          setShowOptions(false);
-                        }}
-                      >
+                      <button className=" w-full py-[10px] hover:bg-stone-200 flex items-center px-3 justify-center whitespace-nowrap   capitalize "
+                        onClick={() => {navigate(`/user/${user.username}`);setShowOptions(false);}}>
                         <div className="flex gap-3 w-full items-center mx-auto  ">
                           <img className="w-5 h-5" src={edit_icon} />
                           View profile
                         </div>
                       </button>
 
-                      <button
-                        className=" w-full py-[10px] hover:bg-stone-200 border-t px-3 flex items-center justify-center whitespace-nowrap  capitalize "
-                        onClick={() => {
-                          navigate(`user/${user.username}/edit`);
-                          setShowOptions(false);
-                        }}
-                      >
+                      <button className=" w-full py-[10px] hover:bg-stone-200 border-t px-3 flex items-center justify-center whitespace-nowrap  capitalize "
+                        onClick={() => {navigate(`user/${user.username}/edit`);setShowOptions(false);}}>
                         <div className="flex gap-3 items-center w-full ">
                           <img className="w-5 h-5" src={edit_icon} />
                           Edit profile
                         </div>
                       </button>
 
-                      <button
-                        className=" hover:bg-stone-200 flex gap-3 border-t px-3 items-center capitalize py-[10px] text-left"
-                        onClick={handleLogout}
-                      >
+                      <button className=" hover:bg-stone-200 flex gap-3 border-t px-3 items-center capitalize py-[10px] text-left"
+                        onClick={handleLogout}>
                         <div className="flex gap-3 items-center  w-full ">
                           <img className="w-5 h-5" src={logout_icon} />
                           logout
@@ -371,28 +321,20 @@ const Nav = () => {
                       </button>
                     </div>
 
-                    {/* <div className='absolute -top-[9.5px] right-12 bg-white diamond w-[20px] h-[20px] '></div> */}
                   </NavModal>
-                  // </div>
                 )}
               </li>
-
             </ul>
           )}
 
-
+          {/* login/sign up */}
           {!isLoggedIn && (
             <div className="flex gap-5 items-center">
-              <NavLink
-                to="/login"
-                className="px-3 py-1  border-stone-500 transition-colors hover:bg-stone-800 hover:border-stone-400 h-full bg-black rounded-[7px]"
-              >
+              <NavLink to="/login" className="px-3 py-1  border-stone-500 transition-colors hover:bg-stone-800 hover:border-stone-400 h-full bg-black rounded-[7px]">
                 Log in
               </NavLink>
-              <NavLink
-                to="/signup"
-                className="px-3 py-1 bg-bloopy rounded-md "
-              >
+
+              <NavLink to="/signup" className="px-3 py-1 bg-bloopy rounded-md ">
                 Get started
               </NavLink>
             </div>
