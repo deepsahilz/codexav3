@@ -54,6 +54,9 @@ app.use("/api/auth", authRoutes);
 //POST--> api/auth/login    ✅
 //POST--> api/auth/logout   ✅
 
+
+// app.use("/api/admin", adminRoutes);
+
 app.use("/api/user", userRoutes);
 //GET    -->api/user/:username            ✅ get user profile
 //PUT    -->api/user/:username            ✅ update/edit user profile

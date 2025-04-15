@@ -50,7 +50,14 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<Signup />} />
 				<Route path="/*" element={<Error404 />} />
-				<Route path="/admin" element={<AdminPage />} />
+				
+				{/* <Route element={<AdminProtected/>}> */}
+					{/* <Route element={<AdminLayout/>}> */}
+						{/* <Route path="/admin" element={<AdminDashboard />} /> */}
+						{/* <Route path="/admin/users" element={<UserManagement />} /> */}
+						{/* <Route path="/admin/projects" element={<ProjectManagement />} /> */}
+					{/* </Route> */}
+				{/* </Route> */}
 
 				<Route element={<Layout />}>
 					<Route path="/" element={<LandingPage1 />} />

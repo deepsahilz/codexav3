@@ -40,4 +40,21 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
+const verifyAdmin = async (req, res, next) => {
+    try {
+        const token = req.cookies.token; // Get token from cookies
+
+        if (!token) {
+            return res.status(401).json({ error: "Unauthorized: No token provided" });
+        }
+
+        //check if request user.role === admin, then next, otherwise res error
+
+    } catch (error) {
+        console.error("Server error during admin verfication:", error);
+        res.status(500).json({ error: "Server error during admin verification" });
+    }
+};
+
+
 export default verifyToken;
