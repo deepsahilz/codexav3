@@ -1,23 +1,42 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
+import { useChatContext } from '../context/ChatContext';
 
-const ModalContainer = ({children}) => {
-    useEffect(() => {
-        document.body.style.overflow = 'hidden';
-        // document.body.style.marginRight = '17px';  
-        
-        return () => {
-          document.body.style.overflow = 'auto';
-          document.body.style.marginRight = '0 ';
-        };
-      }, []);
+const ModalContainer = ({ children, label, onclose, margintop }) => {
+
+  const {setShowChatModal} = useChatContext();
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div  className='absolute backdrop-blur-[2px] w-full z-[25] top-0 h-full min-h-[100vh] flex justify-center overflow-y-auto animate-faded'>
-        <div className='bg-black absolute w-full h-full cursor-zoom-out  opacity-70'></div>
-        <div className='bg-white absolute z-20 mt-[4.2rem] p-5 border animate-popping shadow-lg overflow-hidden rounded-xl  w-[60rem] max-w-4xl'>
-            {children}
+    <div
+      className={`fixed w-full inset-0 z-[99] bg-black/40 cursor-zoom-out flex justify-center ${
+        margintop ? 'mx-auto' : 'flex items-center'
+      } overflow-y-auto animate-faded`}
+      onClick={onclose}
+    >
+      <div
+        className="bg-white z-[100] cursor-auto min-w-[20rem]  max-h-[22rem] max-w-full block border animate-popping shadow-lg rounded-xl"
+        style={{ marginTop: margintop || 0 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="border-b flex justify-between items-center px-5 py-2">
+          <span className="font-semibold">{label || 'heading'}</span>
+          <button
+            onClick={()=>{setShowChatModal(false)}}
+            className="text-2xl hover:text-red-600 leading-none"
+          >
+            &times;
+          </button>
         </div>
+        <div className="p-5">{children}</div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ModalContainer
+export default ModalContainer;

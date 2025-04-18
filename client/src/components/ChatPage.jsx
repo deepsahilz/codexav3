@@ -115,7 +115,7 @@ const ChatPage = () => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Get active user based on activeChat
+
   const activeUser = users.find(user => user.id === activeChat);
 
   // Filter users based on search term and active tab
@@ -410,6 +410,7 @@ const ChatPage = () => {
       <div className="w-[23rem] min-w-[23rem] h-full bg-white border-r flex flex-col">
         {/* Chats section */}
         <div className="flex-1 flex flex-col h-full">
+        
           <div className="pl-7 pt-3 border-b">
             <h2 className="font-bold text-gray-800">Chats</h2>
             <div className="flex mt-2 space-x-4 border-b items-center">

@@ -11,7 +11,7 @@ const Notifications = () => {
     const fetchNotifications = async () => {
       try {
         const response = await axiosInstance.get("/api/user/notifications");
-        // console.log(response.data);
+        console.log(response.data);
         setNotifications(response.data);
       } catch (error) {
         console.log("Error fetching notifications:", error);

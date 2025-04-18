@@ -22,6 +22,7 @@ import commentRoutes from "./src/routes/commentRoutes.js";
 import errorMiddleware from "./src/middlewares/errorMiddleware.js"
 import {initSocket,getIO} from "./socket.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
+import chatRoutes from "./src/routes/chatRoutes.js";
 
 
 const app = express();
@@ -93,7 +94,7 @@ app.use("/api/comment", commentRoutes);
 //DELETE -->api/comment/:commentId           ✔️ delete a comment    
 //POST   -->api/comment/:commentId/reply     ✔️ reply to a comment
 
-// app.use("/api/chat", chatRoutes);      
+app.use("/api/chat", chatRoutes);      
 //POST   -->api/chat                           ✔️ start a chat
 //GET    -->api/chat/                          ✔️ get a chat
 //DELETE -->api/chat/:chatId                   ✔️ delete a chat-----

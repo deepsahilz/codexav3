@@ -12,6 +12,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import AdminNavbar from "./components/AdminNavbar";
 import AdminUsers from "./components/AdminUsers";
 import AdminProjects from "./components/AdminProjects";
+import { ChatContextProvider } from "./context/ChatContext";
 const Error404 = React.lazy(() => import("./components/error404"));
 const Signup = React.lazy(() => import("./components/signup"));
 const Login = React.lazy(() => import("./components/login"));
@@ -23,6 +24,7 @@ const ProfilePage = React.lazy(() => import("./components/ProfilePage"));
 const BountiesPage = React.lazy(() => import("./components/BountiesPage"));
 const ExplorePage = React.lazy(() => import("./components/ExplorePage"));
 const ChatPage = React.lazy(() => import("./components/ChatPage"));
+const ChatPage2 = React.lazy(() => import("./components/ChatPage2"));
 const SearchPage = React.lazy(() => import("./components/SearchPage"));
 const OpenProject = React.lazy(() => import("./components/OpenProject"));
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
@@ -52,6 +54,7 @@ function App() {
 		<>
     	<UserContextProvider>
 		<SocketProvider>
+		<ChatContextProvider>
 			
 		<Suspense>
         	<Routes>
@@ -75,6 +78,7 @@ function App() {
 
 						<Route path="/explore" element={<ExplorePage />} />
 						<Route path="/chat" element={<ChatPage />} />
+						<Route path="/inbox" element={<ChatPage2 />} />
 						<Route path="/search" element={<SearchPage />} />
 						<Route path="/project/:projectId" element={<OpenProject />} />
 						<Route path="/user/:username" element={<ProfilePage />} />
@@ -90,6 +94,8 @@ function App() {
 			<AnimatePresence mode="wait">
 			{isLoading && <PageLoader />}
 			</AnimatePresence>
+
+		</ChatContextProvider>
 		</SocketProvider>
 		</UserContextProvider>
 
