@@ -2,16 +2,21 @@ import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema(
   {
-    isGroup: { type: Boolean, default: false },
+    isGroupChat: { type: Boolean, default: false },
     groupName: { type: String, default: null },
-    groupImage: { type: String, default: null },
-    latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" }, 
-    members: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-      validate: function (members) {
-          return this.isGroup || members.length === 2; // Direct chat must have exactly 2 members
+    groupAvatar: { type: String, default: null },
+    latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
+
+    members: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        role: {
+          type: String,
+          enum: ["admin", "member"],
+          default: "member",
+        },
       },
-  },
+    ],
   },
   { timestamps: true }
 );
