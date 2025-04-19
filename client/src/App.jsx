@@ -26,7 +26,7 @@ const ChatPage = React.lazy(() => import("./components/ChatPage"));
 const SearchPage = React.lazy(() => import("./components/SearchPage"));
 const OpenProject = React.lazy(() => import("./components/OpenProject"));
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
-const PageLoader = React.lazy(() => import("./components/PageLoader"));
+const PageLoader = React.lazy(() => import("./components/PageLoader4"));
 
 function App() {
 	console.log("Rendering App");
