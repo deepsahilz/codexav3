@@ -56,7 +56,6 @@ app.use("/api/auth", authRoutes);
 //POST--> api/auth/login    ✅
 //POST--> api/auth/logout   ✅
 
-
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/user", userRoutes);
@@ -68,6 +67,11 @@ app.use("/api/user", userRoutes);
 //POST   -->api/user/:userId/follow       ✅ follow user 
 //DELETE -->api/user/:userId/follow       ✅ unfollow user
 //GET    -->api/user/:userId/projects     ✅ get all projects of user(with preview,likeCount,commentCount,Tags)
+
+
+
+
+
 
 app.use("/api/tags", tagRoutes);     
 app.use('/api/utils', utilRoutes);

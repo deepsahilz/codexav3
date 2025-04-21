@@ -9,6 +9,7 @@ const UserSearch = ({onUserClick}) => {
 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {chats,activeChat, setActiveChat,setShowChatModal} = useChatContext();
+
     const [query, setQuery] = useState('');
     const {user} = useUserContext();
     const [suggestions, setSuggestions] = useState([]);
@@ -40,17 +41,21 @@ const UserSearch = ({onUserClick}) => {
         regex.test(part) ? <span key={index} className="text-blue-500">{part}</span> : part
       );
     };
-  
+  //dd
     // Handle user selection from search
     const handleSelectChat = (selectedUser) => {
         console.log(selectedUser);
         const existingChat = chats.find(chat =>
-          chat.members.some(m => m.user.id == selectedUser._id)
+          chat.members.some(m => m.user._id == selectedUser._id)
         );
       
         if (existingChat) {
           console.log("chat already exists");
           setActiveChat(existingChat);
+          setQuery('');
+          setShowChatModal(false);
+          setSuggestions([]);
+
         } else {
           const newChat = {
             isTemp: true,
@@ -77,7 +82,7 @@ const UserSearch = ({onUserClick}) => {
             ]
           };
       
-          console.log("here--->",newChat);
+          console.log("temp chat created--->",newChat);
           setActiveChat(newChat);
           setQuery('');
           setShowChatModal(false);

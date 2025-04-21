@@ -17,6 +17,7 @@ import CodexaLogo from "../assets/images/Logo-1.png"
 import { io } from "socket.io-client";
 import Notifications from "./Notifications"
 import { useSocket } from "../context/SocketContext.jsx";
+import InboxPreview from "./InboxPreview.jsx";
 
 
 
@@ -216,35 +217,7 @@ const Nav = () => {
                     </svg>
 
                   {showInbox&&<NavModal  className="w-[20rem] -right-[77px] ">
-                  <div className="text-zinc-700  w-full ">
-                    <h1 className="font-semibold py-[5px] text-center mb-1">Your messages</h1>
-                    <div className="max-h-[20rem] overflow-y-auto w-full">
-                    {chatMessages.map((item, i) => (
-                          <div key={i} className="py-2 border-t w-full flex justify-between items-start hover:bg-zinc-200 transition-colors px-4" >
-                            <div className="flex gap-3 items-center">
-                              <div className="w-[2.2rem] h-[2.2rem] overflow-hidden rounded-full">
-                                <img className="w-full h-full object-cover"
-                                  src={item.dp}
-                                  alt={item.username}
-                                />
-                              </div>
-                              <div className="flex flex-col leading-none gap-1">
-                                <h1 className="text-stone-800 font-bold  ">
-                                  {item.username}
-                                </h1>
-                                <p className="text-stone-700 text-sm max-w-[10rem] truncate">
-                                  {item.message}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="text-gray-600 text-[11px]">
-                              {item.timez} ago
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-
-                  </div>
+                      <InboxPreview/>
                   </NavModal>}
                 </div>
               </li>

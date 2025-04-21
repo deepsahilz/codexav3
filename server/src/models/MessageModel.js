@@ -9,8 +9,9 @@ const messageSchema = new mongoose.Schema(
       {
         url: { type: String },
         type: { type: String, enum: ["image", "video", "audio", "document"] },
-      }
+      },
     
+      isRead: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

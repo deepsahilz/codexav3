@@ -7,7 +7,9 @@ const SocketContext = createContext();
 
 const SocketProviderComponent = ({ children }) => {
   console.log("rendering socket context");
+
   const { user, isLoggedIn } = useUserContext();
+  const [onlineUsers,setOnlineUsers] = useState([]);
   const socketRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
 
@@ -25,8 +27,17 @@ const SocketProviderComponent = ({ children }) => {
         console.log("Failed to load notifications", err);
       }
     };
+    const fetchOnlineUsers = async () => {
+      try {
+        const res = await axiosInstance.get("/api/utils/online-users");
+        setOnlineUsers(res.data);  // Set initial online users
+      } catch (err) {
+        console.log("Failed to load online users", err);
+      }
+    };
 
     fetchInitialNotifications();
+    fetchOnlineUsers();
     socketRef.current = io("http://localhost:5000");
 
     // Send user ID to server once connected
@@ -41,6 +52,14 @@ const SocketProviderComponent = ({ children }) => {
       console.log("new notification received:", notification);
       setNotifications((prev) => [notification, ...prev]);
     });
+    
+    socketRef.current.on("user-online", (userId) => {
+      setOnlineUsers((prev) => [...prev, userId]);
+    });
+
+    socketRef.current.on("user-offline", (userId) => {
+      setOnlineUsers((prev) => prev.filter(id => id !== userId));
+    });
 
     return () => {
       socketRef.current.disconnect();
@@ -49,7 +68,7 @@ const SocketProviderComponent = ({ children }) => {
   }, [isLoggedIn, user?.id]);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, notifications, setNotifications }}>
+    <SocketContext.Provider value={{ socket: socketRef.current, notifications,onlineUsers, setNotifications }}>
       {children}
     </SocketContext.Provider>
   );

@@ -1,50 +1,72 @@
 import React, { useRef, useState } from 'react'
 import { useChatContext } from '../context/ChatContext';
 import axiosInstance from '../utils/axiosInstance';
+import { useUserContext } from '../context/UserContextProvider';
+
 
 const ChatInputBar = () => {
 
+    const {user} = useUserContext();
     const {activeChat,setActiveChat,chats,setChats,messages,setMessages} = useChatContext();
     const [newMessage, setNewMessage] = useState('');
 
     const createChat = async (chatData) => {
-        console.log(chatData);
         try {
-          const res = await axiosInstance.post("/api/chat/new", {
-            isGroup: chatData.isGroup,
-            groupName: chatData.groupName,
-            groupAvatar: chatData.groupAvatar,
-            members: chatData.members, // [{ user: id, role: "admin" | "member" }]
+          const memberIds = chatData.members.map((member) => member.user._id);
+          const res = await axiosInstance.post("/api/chat", {
+            content: newMessage,
+            members: memberIds,
+            senderId: user.id,
           });
-          return res.data; // the created chat
+          return res.data; 
         } catch (error) {
           console.error("Failed to create chat:", error);
           return null;
         }
       };
       
-
-    const handleSendMessage = async () => {
+      const handleSendMessage = async () => {
         if (newMessage.trim() === '') return;
-        console.log("welcome")
-      
+    
         if (activeChat.isTemp) {
-            // console.log(activeChat);
-          const createdChat = await createChat(activeChat);
-      
-          if (createdChat) {
+            const createdChat = await createChat(activeChat);
+            console.log("need to check", createdChat);
             setChats([createdChat, ...chats]);
             setActiveChat(createdChat);
-            // Optionally send the first message here
-          }
-      
-          setNewMessage('');
-          return;
+            setNewMessage('');
+            return;
         }
-      
-        // Normal message sending logic here (existing chat)
-        setNewMessage('');
-      };    
+    
+        try {
+            const res = await axiosInstance.post(`/api/chat/${activeChat._id}/messages`, {
+                content: newMessage,
+                senderId: user.id,
+                chatId: activeChat._id,
+            });
+            console.log("message sent", res.data);
+            
+            // Update messages state
+            setMessages([...messages, res.data]);
+            setNewMessage('');
+    
+            // Update latest message in the chat list
+            const updatedChats = chats.map((chat) => {
+                if (chat._id === activeChat._id) {
+                    return { ...chat, latestMessage: res.data};  // Update latestMessage
+                }
+                return chat;
+            });
+            console.log("updates chats::",updatedChats)
+    
+            // Set updated chats back to the state
+            setChats(updatedChats);
+    
+        } catch (e) {
+            console.log("error sending message:", e);
+        }
+    
+    };
+       
       
     
     const handleKeyPress = (e) => {
@@ -83,5 +105,5 @@ const ChatInputBar = () => {
         </div>
     )
 }
-
+// hey, can u create a doodle art background, light mode. actuallly i want a similar doodle background like whatsapp have in their chat background. make sure the doodles are cool,expressive and related to tech and code somehow. not much big, a bit small, same size like whatsapp's.
 export default ChatInputBar

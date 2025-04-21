@@ -13,6 +13,7 @@ import AdminNavbar from "./components/AdminNavbar";
 import AdminUsers from "./components/AdminUsers";
 import AdminProjects from "./components/AdminProjects";
 import { ChatContextProvider } from "./context/ChatContext";
+import DummyComp from "./components/DummyComp";
 const Error404 = React.lazy(() => import("./components/error404"));
 const Signup = React.lazy(() => import("./components/signup"));
 const Login = React.lazy(() => import("./components/login"));
@@ -64,6 +65,7 @@ function App() {
 				
 				<Route element={<Layout />}>
 
+					<Route path="/dev" element={<DummyComp />} />
 					<Route path="/" element={<LandingPage1 />} />
 
 					<Route element={<Protectedroutes />}>

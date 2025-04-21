@@ -2,7 +2,7 @@ import express from "express";
 import verifyToken from "../middlewares/authMiddleware.js";
 const router = express.Router();
 import User from "../models/UserModel.js";
-
+import { getOnlineUsers } from "../../socket.js";
 
 
 // Route to check username availability
@@ -63,7 +63,11 @@ router.get("/searchUser",verifyToken, async (req, res) => {
   }
 });
 
-// router.get("/suggest/search")
+router.get("/online-users", (req, res) => {
+  const onlineUsers = getOnlineUsers();
+  const userIds = Array.from(onlineUsers.keys());  // Extract user IDs from the map
+  res.status(200).json(userIds);  // Send the user IDs as response
+});
 
 
 export default router;

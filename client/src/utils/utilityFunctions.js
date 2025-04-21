@@ -32,4 +32,39 @@ export function timeAgo(dateString) {
   
     return timeString;
   }
+
+export  function messageTime(isoString) {
+    const date = new Date(isoString);
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12 || 12;
+    return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  export const formatDate = (date) => {
+    const today = new Date();
+    const messageDate = new Date(date);
+  
+    // Check if the message is from today
+    if (messageDate.toDateString() === today.toDateString()) {
+      return 'Today';
+    }
+  
+    // Check if the message is from yesterday
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (messageDate.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+  
+    // If not today or yesterday, return the full date (e.g., 29 April)
+    return messageDate.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+  
+  
   

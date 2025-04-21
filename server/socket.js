@@ -11,7 +11,7 @@ export const initSocket = (server) => {
       methods: ["GET", "POST"]
     }
   });
-
+//x
   io.on("connection", (socket) => {
     console.log("🔄 New client connected:", socket.id);
 
@@ -19,6 +19,8 @@ export const initSocket = (server) => {
     socket.on("join", (userId) => {
       onlineUsers.set(userId, socket.id);
       console.log(`🔄 userId "${userId}" connected with socketId "${socket.id}"`);
+      socket.broadcast.emit("user-online", userId);//added now
+
     });
 
     socket.on("disconnect", () => {
@@ -26,6 +28,7 @@ export const initSocket = (server) => {
         if (sockId === socket.id) {
           onlineUsers.delete(userId);
           console.log(`User ${userId} disconnected`);
+          socket.broadcast.emit("user-offline", userId);//added now
           break;
         }
       }

@@ -10,7 +10,7 @@ const ChatPage2 = () => {
     const {showChatModal,setShowChatModal} = useChatContext();
     
     return (
-        <div className='flex flex-row h-[90vh] relative w-full'>
+        <div className='flex flex-row h-[calc(100vh-3.8rem)] relative w-full'>
             <ChatList/>
             <ChatBox/>
             {/* <div className=' absolute flex w-full items-center bg-black/40 justify-center h-full'>
