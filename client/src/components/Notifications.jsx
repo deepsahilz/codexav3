@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import Avatar from "../components/Avatar";
 import { timeAgo } from '../utils/utilityFunctions';
+import LoadingSpinner from './LoadingSpinner';
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -26,12 +27,7 @@ const Notifications = () => {
   return (
     <div className='w-full  flex flex-col text-zinc-900'>
       <div className='w-full font-semibold border-b py-2 text-center'>Your notifications</div>
-      {loading ? (
-        <div className='flex justify-center items-center'>
-          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
+      {loading ? (<LoadingSpinner/>
       ) : notifications.length > 0 ? (
         <div className='flex flex-col h-[17rem] overflow-hidden overflow-y-auto'>
           {notifications.map((n, index) => (
@@ -71,7 +67,7 @@ const Notifications = () => {
           ))}
         </div>
       ) : (
-        <div className='bg-green-400'>No notifications</div>
+        <div className='h-[20rem] p-5 flex justify-center items-center'>No notifications to show</div>
       )}
     </div>
   );

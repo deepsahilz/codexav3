@@ -83,10 +83,20 @@ const ChatBox = () => {
     );
   };
 
-  const RenderMessage = ({ message, index }) => {
+  const RenderMessage = ({ message }) => {
     const mymessage = message.senderId._id === user.id;
+  
     return (
-      <div key={message._id} className={`flex mb-4 ${mymessage ? 'justify-end' : 'justify-start'}`}>
+      <div key={message._id} className={`flex items-end mb-4 ${mymessage ? 'justify-end' : 'justify-start'}`}>
+        {!mymessage && (
+          <Avatar
+            avatar_url={message.senderId.avatar}
+            username={message.senderId.username}
+            width="32px"
+            height="32px"
+            className="mr-2"
+          />
+        )}
         <div className={`max-w-xs md:max-w-md rounded-[1.5rem] px-4 py-2 ${mymessage ? 'bg-purple-600 text-white rounded-br-none' : 'bg-white shadow-md text-gray-800 rounded-bl-none'}`}>
           <p className="text-sm">{message.content}</p>
           <div className={`text-xs mt-1 text-right ${mymessage ? 'text-purple-200' : 'text-gray-500'}`}>
@@ -96,6 +106,7 @@ const ChatBox = () => {
       </div>
     );
   };
+  
 
   if (!activeChat) return (
     <div className="flex items-center justify-center h-full w-full text-gray-500">

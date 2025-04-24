@@ -2,9 +2,9 @@ import React from 'react';
 
 const ProjectSkeletonCard = () => {
   return (
-    <div className='flex flex-col gap-2 h-full w-full animate-pulse'>
+    <div className='flex flex-col gap-2  w-full animate-pulse'>
       {/* Image Section */}
-      <div className='w-full h-full relative rounded-lg overflow-hidden bg-zinc-200'>
+      <div className='w-full h-[calc(100vh-3.8rem)  ] relative rounded-lg overflow-hidden bg-zinc-200'>
         {/* Overlay */}
         <div className='absolute top-3 pl-4 pr-5 w-full flex justify-between items-center gap-2'>
           <div className='flex gap-2 items-center'>

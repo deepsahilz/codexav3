@@ -7,8 +7,9 @@ import { useUserContext } from '../context/UserContextProvider';
 const ChatInputBar = () => {
 
     const {user} = useUserContext();
-    const {activeChat,setActiveChat,chats,setChats,messages,setMessages} = useChatContext();
+    const {activeChat,setActiveChat,chats,setChats,messages,setMessages,isTyping,setIsTyping} = useChatContext();
     const [newMessage, setNewMessage] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     const createChat = async (chatData) => {
         try {
@@ -26,6 +27,8 @@ const ChatInputBar = () => {
       };
       
       const handleSendMessage = async () => {
+        setIsSending(true);
+
         if (newMessage.trim() === '') return;
     
         if (activeChat.isTemp) {
@@ -48,6 +51,7 @@ const ChatInputBar = () => {
             // Update messages state
             setMessages([...messages, res.data]);
             setNewMessage('');
+            setIsSending(false)
     
             // Update latest message in the chat list
             const updatedChats = chats.map((chat) => {
@@ -63,10 +67,25 @@ const ChatInputBar = () => {
     
         } catch (e) {
             console.log("error sending message:", e);
+            setIsSending(false);
         }
     
     };
        
+    const [typingTimeout, setTypingTimeout] = useState(null);
+    const handleTyping = (e) => {
+    // setMessage(e.target.value);
+    socket.emit("typing", activeChat._id);
+
+    // Clear existing timeout
+    if (typingTimeout) clearTimeout(typingTimeout);
+
+    // Set new timeout
+    setTypingTimeout(setTimeout(() => {
+        socket.emit("stop-typing", activeChat._id);
+    }, 1500)); // stop after 1.5 sec of inactivity
+    };
+
       
     
     const handleKeyPress = (e) => {
@@ -83,7 +102,7 @@ const ChatInputBar = () => {
                 placeholder="Type a message here..."
                 className="flex-1 bg-transparent py-3 focus:outline-none text-sm"
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                onChange={(e) => {setNewMessage(e.target.value);handleTyping(e)}}
                 onKeyDown={handleKeyPress}
             />
             <div className="flex space-x-2 ml-2">
@@ -94,7 +113,8 @@ const ChatInputBar = () => {
                     : 'text-purple-600 hover:bg-purple-100'
                 }`}
                 onClick={handleSendMessage}
-                disabled={newMessage.trim() === ''}
+                disabled={newMessage.trim() === ''|| isSending}
+
                 >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
@@ -105,5 +125,4 @@ const ChatInputBar = () => {
         </div>
     )
 }
-// hey, can u create a doodle art background, light mode. actuallly i want a similar doodle background like whatsapp have in their chat background. make sure the doodles are cool,expressive and related to tech and code somehow. not much big, a bit small, same size like whatsapp's.
 export default ChatInputBar

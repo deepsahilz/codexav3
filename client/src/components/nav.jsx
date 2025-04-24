@@ -193,7 +193,7 @@ const Nav = () => {
               {/* inbox */}
               <li className="relative h-full flex items-center">
                 <div className=" cursor-pointer px-2 py-[16px]"
-                  onClick={() => {navigate(`/chat`)}}
+                  onClick={() => {navigate(`/inbox`)}}
                   onMouseEnter={() => {setShowInbox(true);}}
                   onMouseLeave={() => {setShowInbox(false);}}>
                     <svg

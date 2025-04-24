@@ -15,7 +15,7 @@ const ChatList = () => {
         { id: 'all', label: 'all' },
         { id: 'chats', label: 'chats' },
         { id: 'groups', label: 'groups' }
-      ];
+      ];//l
 
     const {user} = useUserContext();
     
@@ -67,14 +67,17 @@ const ChatList = () => {
     
 
     const filteredChats = chats.filter(chat => {
-      // console.log("watch this--->",chat);
-        if (chat.isGroupChat) {
-          return chat.groupName.toLowerCase().includes(query.toLowerCase());
-        } else {
-            const otherUser = chat.members.find(m => m.user._id !== user.id);
-            return otherUser?.user.fullName.toLowerCase().includes(query.toLowerCase());
-        }
-      });
+      const isGroup = chat.isGroupChat;
+      const otherUser = chat.members.find(m => m.user._id !== user.id);
+      const nameMatch = isGroup
+        ? chat.groupName.toLowerCase().includes(query.toLowerCase())
+        : otherUser?.user.fullName.toLowerCase().includes(query.toLowerCase());
+    
+      if (activeTab === 'all') return nameMatch;
+      if (activeTab === 'chats') return !isGroup && nameMatch;
+      if (activeTab === 'groups') return isGroup && nameMatch;
+    });
+    
     
     
     return (

@@ -22,6 +22,7 @@ export const initSocket = (server) => {
       socket.broadcast.emit("user-online", userId);//added now
 
     });
+    
 
     socket.on("disconnect", () => {
       for (const [userId, sockId] of onlineUsers.entries()) {

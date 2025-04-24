@@ -14,6 +14,7 @@ import AdminUsers from "./components/AdminUsers";
 import AdminProjects from "./components/AdminProjects";
 import { ChatContextProvider } from "./context/ChatContext";
 import DummyComp from "./components/DummyComp";
+import PageLoader from "./components/PageLoader";
 const Error404 = React.lazy(() => import("./components/error404"));
 const Signup = React.lazy(() => import("./components/signup"));
 const Login = React.lazy(() => import("./components/login"));
@@ -29,7 +30,7 @@ const ChatPage2 = React.lazy(() => import("./components/ChatPage2"));
 const SearchPage = React.lazy(() => import("./components/SearchPage"));
 const OpenProject = React.lazy(() => import("./components/OpenProject"));
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
-const PageLoader = React.lazy(() => import("./components/PageLoader4"));
+// const PageLoader = React.lazy(() => import("./components/PageLoader4"));
 
 function App() {
 	console.log("Rendering App");
@@ -79,7 +80,6 @@ function App() {
 						</Route>
 
 						<Route path="/explore" element={<ExplorePage />} />
-						<Route path="/chat" element={<ChatPage />} />
 						<Route path="/inbox" element={<ChatPage2 />} />
 						<Route path="/search" element={<SearchPage />} />
 						<Route path="/project/:projectId" element={<OpenProject />} />

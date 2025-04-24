@@ -91,6 +91,7 @@ const texts = [
         </motion.div>
       </AnimatePresence>
     </div>
+    {/* / */}
         {/* <p className="text-white font-semibold">For devs, by devs</p> */}
       </div>
         <img className='w-full h-full rounded-lg object-cover' src={banner}/>
@@ -191,10 +192,10 @@ const texts = [
 
             <button disabled ={isSubmitting} className="w-full bg-black hover:bg-blue-600 text-white font-bold py-2 mt-3 px-4 rounded mb-4" type="submit">Sign Up</button>
             
-            <button disabled ={isSubmitting} className="w-full flex items-center hover:border-gray-400 justify-center border border-gray-300 py-2 px-4 rounded">
+            {/* <button disabled ={isSubmitting} className="w-full flex items-center hover:border-gray-400 justify-center border border-gray-300 py-2 px-4 rounded">
               <img className='w-5 h-5 mr-2' src={googleIcon}></img> 
               Continue with Google
-            </button> 
+            </button>  */}
 
             
           </form>

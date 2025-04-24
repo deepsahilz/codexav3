@@ -12,6 +12,8 @@ const SocketProviderComponent = ({ children }) => {
   const [onlineUsers,setOnlineUsers] = useState([]);
   const socketRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  
 
   useEffect(() => {
     console.log("entered socket useEffect");
@@ -68,7 +70,7 @@ const SocketProviderComponent = ({ children }) => {
   }, [isLoggedIn, user?.id]);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, notifications,onlineUsers, setNotifications }}>
+    <SocketContext.Provider value={{ socket: socketRef.current, notifications,onlineUsers,isTyping,setIsTyping, setNotifications }}>
       {children}
     </SocketContext.Provider>
   );

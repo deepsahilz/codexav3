@@ -53,24 +53,26 @@ const OpenProject = () => {
                 <div className='flex  justify-between items-center'>
                     <h1 className='font-bold text-5xl '>{project.title}</h1>
                     <div className='flex gap-5'>
-                      <button className=' bg-white hover:bg-blue-600 transition-colors duration-300 border shadow-md flex gap-2 items-center self-start px-4 py-2  rounded-lg'>    
+                      <a target="_blank"
+  rel="noopener noreferrer" href={project.liveLink} className=' bg-white hover:bg-blue-600 transition-colors duration-300 border shadow-md flex gap-2 items-center self-start px-4 py-2  rounded-lg'>    
                         <img className='w-6 h-6' src={arrow}/>
                           <span className='font-semibold'>
                               see it Live
                           </span>
-                      </button>
+                      </a>
 
-                      <button className=' bg-white border shadow-md flex gap-2 items-center self-start px-4 py-2  rounded-lg'>    
-                          <svg className='w-5 h-5' version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                      <a target="_blank"
+  rel="noopener noreferrer" href={project.codeLink} className=' bg-white border shadow-md flex gap-2 items-center self-start px-4 py-2  rounded-lg'>    
+                          {/* <svg className='w-5 h-5' version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                               width="800px" height="800px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
                           <path fill="#231F20" d="M52,24h-4v-8c0-8.836-7.164-16-16-16S16,7.164,16,16v8h-4c-2.211,0-4,1.789-4,4v32c0,2.211,1.789,4,4,4h40
                               c2.211,0,4-1.789,4-4V28C56,25.789,54.211,24,52,24z M32,48c-2.211,0-4-1.789-4-4s1.789-4,4-4s4,1.789,4,4S34.211,48,32,48z M40,24
                               H24v-8c0-4.418,3.582-8,8-8s8,3.582,8,8V24z"/>
-                          </svg>
+                          </svg> */}
                           <span className='font-semibold'>
-                              view code
+                              View code
                           </span>
-                      </button>
+                      </a>
                     </div>
                 </div>
                 <div className='flex mt-3 items-center gap-20 mb-2'>
@@ -154,7 +156,7 @@ const OpenProject = () => {
 
         </div>
         <div className='w-full h-[20rem] bg-white'>
-          <h2 className='text-center w-full'>see more related projects</h2>
+          {/* <h2 className='text-center w-full p-4 block bg-white shadow-md rounded-lg'>see more related projects- coming soon</h2> */}
         </div>
 
         </div>

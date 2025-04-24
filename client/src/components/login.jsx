@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import 'react-toastify/dist/ReactToastify.css';
 import codexaLogo from "../assets/images/Logo-1.png"
+import banner from '../assets/images/side (4).jfif'
+
 
 
 import loaderIcon from '../assets/images/loader_icon2.svg'
@@ -42,14 +44,16 @@ const login = () => {
 
   return (
     <div className="bg-stone-200 flex items-center w-full h-screen">
-    <div className=" bg-white mx-auto flex rounded-lg shadow-lg overflow-hidden w-[50rem] ">
+    <div className=" bg-white mx-auto flex rounded-lg shadow-lg font-nb overflow-hidden w-[50rem] ">
       
-      <div className="bg-black w-[45%] p-12 flex flex-col justify-center">
-        <div className='h-full w-full'>
+      <div className="w-[45%] relative flex flex-col justify-center">
+        <div className='h-full absolute top-5 left-5 w-full'>
                   <h1 className="text-xl flex items-center gap-[6px]  font-rejouice font-semibold tracking-wide text-white">
                     <img className='w-5 h-5 -mt-[5px]' src={codexaLogo}/>
                     Codexa.io</h1>        
                 </div>
+          <img className='w-full h-full rounded-lg object-cover' src={banner}/>
+        
         {/* <h1 className="text-[2rem] tracking-tight font-['sora'] font-semibold text-white">Codexa</h1>
         <h2 className="text-[1.7rem] tracking-tight font-['sora']  text-stone-200 leading-[2rem] mb-4">Digital platform for developers to showcase their work</h2>
         <p className="text-white opacity-75">For the developers, by the developers</p> */}
@@ -65,7 +69,7 @@ const login = () => {
 
         <div className="w-full">
           <div className="mb-8 ">
-              <h2 className="text-[1.6rem] font-semibold tracking-tighter   text-gray-800">Welcome back.</h2>
+              <h2 className="text-[1.6rem] font-semibold tracking-  text-gray-800">Welcome back.</h2>
           </div>
 
           <form action="" onSubmit={handleSubmit(handleLogin)}>
@@ -101,17 +105,17 @@ const login = () => {
                       <input type="checkbox" className="form-checkbox"/>
                       <span className="ml-2 text-gray-600">Remember me</span>
                   </label> */}
-                  <a href="#" className="text-blue-500 text-sm ">Forgot password?</a>
+                  {/* <a href="#" className="text-blue-500 text-sm ">Forgot password?</a> */}
               </div>
 
               <p className="text-center">New user?&nbsp; <Link to="/signup" className="text-blue-600" >Create an account</Link></p>
 
               <button disabled ={isSubmitting}  className="w-full mt-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4" type="submit">Log in</button>
 
-              <button disabled ={isSubmitting} className="w-full flex items-center hover:border-gray-400 justify-center border border-gray-300 py-2 px-4 rounded">
+              {/* <button disabled ={isSubmitting} className="w-full flex items-center hover:border-gray-400 justify-center border border-gray-300 py-2 px-4 rounded">
               <img className='w-5 h-5 mr-2' src={googleIcon}></img> 
               Continue with Google
-            </button> 
+            </button>  */}
           
             </form>
 

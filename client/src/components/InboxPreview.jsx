@@ -5,14 +5,14 @@ import { timeAgo } from '../utils/utilityFunctions';
 import { useNavigate } from 'react-router-dom';
 import { useChatContext } from '../context/ChatContext';
 import { useUserContext } from '../context/UserContextProvider';
+import LoadingSpinner from './LoadingSpinner';
 
 const InboxPreview = () => {
     const navigate = useNavigate();
     const { user } = useUserContext();
     const {chats,setChats,activeChat,setActiveChat} = useChatContext();
-    const [loading, setLoading] = useState(false); // Track loading state
+    // const [isLoading, setIsLoading] = useState(false); // Track loading state
 
-//   const [notifications, setNotifications] = useState([]);
 
 // useEffect(()=>{
 //       console.log("fetching chats...")
@@ -27,16 +27,11 @@ const InboxPreview = () => {
 //       },[user])    
 
 
+
   return (
     <div className='w-full  flex flex-col text-zinc-900'>
       <div className='w-full font-semibold border-b py-2 text-center'>Your Inbox</div>
-      {loading ? (
-        <div className='flex justify-center items-center'>
-          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
-      ) : chats.length > 0 ? (
+      {!chats ? (<LoadingSpinner/>) : chats.length > 0 ? (
         <div className='flex flex-col h-[17rem] overflow-hidden overflow-y-auto'>
           {chats.map((chat, index) => {
             const otherUser = chat.members.find(m => m.user._id !== user.id);
@@ -66,7 +61,13 @@ const InboxPreview = () => {
                     </div>
                     <div className='flex justify-between items-end'>
                     <p className="text-sm text-gray-500 truncate">{chat.latestMessage.content}</p>
-                    {!chat.latestMessage.isRead && chat.latestMessage.senderId._id !== user.id &&activeChat._id !== chat._id&& (
+                    {
+
+                    !chat.latestMessage?.isRead 
+                    && 
+                    chat.latestMessage.senderId?._id !== user.id &&
+                    // activeChat._id !== chat._id&&
+                     (
                           <div className="ml-2 w-2 min-w-2 h-2 bg-blue-700 mt-1 rounded-full flex items-center justify-center">
                             {/* Blue dot for unread message not sent by self */}
                           </div>
@@ -78,7 +79,7 @@ const InboxPreview = () => {
             })}
         </div>
       ) : (
-        <div className='bg-green-400'>No messages yet</div>
+        <div className='h-[10rem] p-5 flex justify-center items-center'>No notifications to show</div>
       )}
     </div>
   );
