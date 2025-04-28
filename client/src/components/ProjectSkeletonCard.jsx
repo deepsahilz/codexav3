@@ -1,4 +1,3 @@
-import React from 'react';
 
 const ProjectSkeletonCard = () => {
   return (
@@ -36,7 +35,7 @@ const ProjectSkeletonCard = () => {
         </div> */}
 
         {/* Thumbnail */}
-        {/* <div className='w-full h-[200px] bg-zinc-300'></div> */}
+        <div className='w-full h-[200px] bg-zinc-300'></div>
       </div>
 
       {/* Details */}

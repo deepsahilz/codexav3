@@ -4,6 +4,7 @@ import axiosInstance from '../utils/axiosInstance.js';
 const AdminProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -20,13 +21,19 @@ const AdminProjects = () => {
   }, []);
 
   const handleDelete = async (projectId) => {
+    // Show confirmation alert
+    const confirmDelete = window.confirm('Are you sure you want to delete this project?');
+  
+    if (!confirmDelete) return; // If user cancels, stop further execution
+  
     try {
-      await axiosInstance.delete(`/api/admin/projects/${projectId}`);
+      await axiosInstance.delete(`/api/admin/project/${projectId}`);
       setProjects(prev => prev.filter(project => project._id !== projectId));
     } catch (err) {
       console.error('Failed to delete project:', err);
     }
   };
+  
 
   if (loading) return <div className="p-6">Loading projects...</div>;
 

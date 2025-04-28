@@ -1,7 +1,27 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-const LikeButton = ({ likeCount, onClick, isLiked, outlineColor, fillColor }) => {
+const LikeButton = ({ likeCount,handleLike,handleUnlike,isLiked, outlineColor, fillColor }) => {
+
   const [isButtonLiked, setIsButtonLiked] = useState(isLiked);
+// send isLiked value,LikeCount value,
+  const toggleLike = async () => {
+    if (likeLoading) return;
+    setLikeLoading(true);
+    try {
+        if (isLiked) {
+            await handleUnlike();
+            setLikeCount(likeCount - 1);
+        } else {
+            await handleLike();
+            setLikeCount(likeCount + 1);
+        }
+        setIsLiked(!isLiked);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        setLikeLoading(false);
+    }
+};
 
   useEffect(() => {
     setIsButtonLiked(isLiked);

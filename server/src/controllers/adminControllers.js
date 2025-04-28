@@ -75,3 +75,14 @@ export const fetchProjects = async (req, res) => {
         res.status(500).json({ error: "Server error while fetching projects" });
     }
 }
+
+export const deleteProject = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        await Project.findByIdAndDelete(projectId);
+        res.status(200).json({ message: "Project deleted successfully" });
+    } catch (error) {
+        console.error("Delete error:", error);
+        res.status(500).json({ error: "Server error while deleting project" });
+    }
+}

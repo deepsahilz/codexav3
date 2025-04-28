@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/:commentId/like", verifyToken, async (req, res) => {
     try {
         const { commentId } = req.params;
-        const userId = req.user.id; // Assuming user is authenticated
+        const userId = req.user.userId; // Assuming user is authenticated
 
         if (!commentId) {
             return res.status(400).json({ message: "Comment ID is required." });
@@ -33,7 +33,7 @@ router.post("/:commentId/like", verifyToken, async (req, res) => {
 router.delete("/:commentId/like",verifyToken, async (req, res) => {
     try {
         const { commentId } = req.params;
-        const userId = req.user.id; // Assuming user is authenticated
+        const userId = req.user.userId; // Assuming user is authenticated
 
         if (!commentId) {
             return res.status(400).json({ message: "Comment ID is required." });
@@ -55,45 +55,57 @@ router.delete("/:commentId/like",verifyToken, async (req, res) => {
     }
 });
 
-router.get("/:parentId/replies",verifyToken,async (req, res) => {
+router.get("/:parentId/replies", verifyToken, async (req, res) => {
     try {
-        const { parentId } = req.params;
+      const { parentId } = req.params;
+      const userId = req.user.id;
   
-        if (!parentId) {
-            return res.status(400).json({ message: "Parent ID is required." });
-        }
+      if (!parentId) {
+        return res.status(400).json({ message: "Parent ID is required." });
+      }
   
-        // Fetch child comments for the given parentId
-        const comments = await Comment.find({ parentId })
-            .populate("userId", "username avatar") // Fetch only required fields
-            .sort({ createdAt: -1 })
-            .lean(); // Convert to plain JavaScript objects
+      const comments = await Comment.find({ parentId })
+        .populate("userId", "username avatar")
+        .sort({ createdAt: -1 })
+        .lean();
   
-        // Extract comment IDs for like count aggregation
-        const commentIds = comments.map(comment => comment._id);
+      const commentIds = comments.map(comment => comment._id);
   
-        // Fetch like counts for the comments
-        const likes = await CommentLike.aggregate([
-            { $match: { commentId: { $in: commentIds } } },
-            { $group: { _id: "$commentId", likeCount: { $sum: 1 } } }
-        ]);
+      const likes = await CommentLike.aggregate([
+        { $match: { commentId: { $in: commentIds } } },
+        { $group: { _id: "$commentId", likeCount: { $sum: 1 } } }
+      ]);
   
-        // Create a like count map for quick lookup
-        const likeMap = new Map(likes.map(like => [like._id.toString(), like.likeCount]));
+      const replyCounts = await Comment.aggregate([
+        { $match: { parentId: { $in: commentIds } } },
+        { $group: { _id: "$parentId", replyCount: { $sum: 1 } } }
+      ]);
   
-        // Transform comments to flatten user info and include likes
-        const formattedComments = comments.map(comment => ({
-            ...comment,
-            username: comment.userId?.username || "Unknown",
-            avatar: comment.userId?.avatar || null,
-            likes: likeMap.get(comment._id.toString()) || 0,
-        }));
+      const userLikes = await CommentLike.find({
+        commentId: { $in: commentIds },
+        userId: userId
+      }).lean();
   
-        res.status(200).json(formattedComments);
+      const likeMap = new Map(likes.map(like => [like._id.toString(), like.likeCount]));
+      const replyMap = new Map(replyCounts.map(reply => [reply._id.toString(), reply.replyCount]));
+      const userLikedSet = new Set(userLikes.map(like => like.commentId.toString()));
+  
+      const formattedComments = comments.map(comment => ({
+        ...comment,
+        username: comment.userId?.username || "Unknown",
+        avatar: comment.userId?.avatar || null,
+        likes: likeMap.get(comment._id.toString()) || 0,
+        replyCount: replyMap.get(comment._id.toString()) || 0,
+        isLiked: userLikedSet.has(comment._id.toString()),
+      }));
+  
+      res.status(200).json(formattedComments);
     } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
+      res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  })
+  });
+  
+
 
 
 export default router;

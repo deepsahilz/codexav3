@@ -15,6 +15,9 @@ import AdminProjects from "./components/AdminProjects";
 import { ChatContextProvider } from "./context/ChatContext";
 import DummyComp from "./components/DummyComp";
 import PageLoader from "./components/PageLoader";
+import AboutPage from "./pages/AboutPage";
+import HelpPage from "./pages/HelpPage";
+const FollowingPage = React.lazy(() => import("./pages/FollowingPage"));
 const Error404 = React.lazy(() => import("./components/error404"));
 const Signup = React.lazy(() => import("./components/signup"));
 const Login = React.lazy(() => import("./components/login"));
@@ -28,10 +31,9 @@ const ExplorePage = React.lazy(() => import("./components/ExplorePage"));
 const ChatPage = React.lazy(() => import("./components/ChatPage"));
 const ChatPage2 = React.lazy(() => import("./components/ChatPage2"));
 const SearchPage = React.lazy(() => import("./components/SearchPage"));
-const OpenProject = React.lazy(() => import("./components/OpenProject"));
+const OpenProject = React.lazy(() => import("./components/OpenProject2"));
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
 // const PageLoader = React.lazy(() => import("./components/PageLoader4"));
-
 function App() {
 	console.log("Rendering App");
 	
@@ -65,6 +67,8 @@ function App() {
 				<Route path="/*" element={<Error404 />} />
 				
 				<Route element={<Layout />}>
+				<Route path="/help" element={<HelpPage/>} />
+				<Route path="/about" element={<AboutPage/>} />
 
 					<Route path="/dev" element={<DummyComp />} />
 					<Route path="/" element={<LandingPage1 />} />
@@ -80,6 +84,7 @@ function App() {
 						</Route>
 
 						<Route path="/explore" element={<ExplorePage />} />
+						<Route path="/following" element={<FollowingPage />} />
 						<Route path="/inbox" element={<ChatPage2 />} />
 						<Route path="/search" element={<SearchPage />} />
 						<Route path="/project/:projectId" element={<OpenProject />} />

@@ -255,10 +255,10 @@ const ProfilePage = () => {
             </div>)}
             
             <h1 className="text-lg font-semibold pb-2">
-                <span>Sort by</span>
-                <span className="border ml-2 bg-slate-200 p-1 rounded-lg text-[1rem]">
+                <span>2025</span>
+                {/* <span className="border ml-2 bg-slate-200 p-1 rounded-lg text-[1rem]">
                 Latest
-                </span>
+                </span> */}
             </h1>
             </div>
             <div className="mt-10 min-h-[30rem]">

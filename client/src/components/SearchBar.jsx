@@ -29,6 +29,7 @@ const SearchBar = () => {
   // const dummyData = ["hello", "javacom", "bye logy"];
   const recentSearches = [
     "java",
+    "React",
     "Library management system",
     "Ai attendance system",
   ];
@@ -45,8 +46,8 @@ const SearchBar = () => {
       if (!searchTerm) return;
   
       try {
-        const { data } = await axiosInstance.get(`/api/suggest/project?query=${searchTerm}`);
-        // console.log(data);
+        const { data } = await axiosInstance.get(`/api/suggest/suggestions?query=${searchTerm}`);
+        console.log(data);
         setSuggestions(data);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -182,9 +183,9 @@ const renderModalContent = () => {
               <li
                 key={i}
                 className="hover:bg-zinc-200 text-lg font-bold py-1 px-5 flex justify-between items-center text-zinc-700 cursor-pointer transition-all"
+                onClick={() => handleSearch(item)}
                 >
                 <div 
-                onClick={() => handleSearch(item)}
                 className="flex items-center capitalize">
                   <img className="w-6 h-6 opacity-50 mr-2 " src={recentIcon} />
                   {item}
@@ -206,6 +207,7 @@ const renderModalContent = () => {
           <li
             key={i}
             className="px-2 py-1 text-sm hover:bg-zinc-200 text-zinc-600 border-zinc-300 cursor-pointer rounded-lg border"
+            onClick={() => handleSearch(recent)}
           >
             {recent}
           </li>
@@ -217,7 +219,7 @@ const renderModalContent = () => {
   
 
   return (
-    <div className="md:w-[24rem]  xl:w-[33rem]">
+    <div className="md:w-[24rem] ">
     <form 
     onSubmit={handleSubmit}
     ref={searchRef}
@@ -257,11 +259,9 @@ const renderModalContent = () => {
               setValue("search", searchValue);
               handleSearch(searchValue);
           }
-      }}
-      
+      }} 
       />
      
-
 
       {showSearchModal && <div className="absolute text-zinc-800 top-12 left-0 right-0 mt-1 py-5 bg-white border border-zinc-300 rounded-lg shadow-xl max-h-50 overflow-hidden z-10">
         {renderModalContent()}

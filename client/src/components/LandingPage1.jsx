@@ -16,7 +16,7 @@ const LandingPage1 = () => {
 
   const features = [
     { title: "Share Your Work", description: "Showcase your projects to a community of developers" },
-    { title: "Find Collaborators", description: "Connect with like-minded creators on exciting projects" },
+    { title: "Connect with peers", description: "Connect with like-minded creators on exciting projects" },
     { title: "Get Inspired", description: "Discover trending projects in the developer community" }
   ];
   
@@ -95,10 +95,10 @@ const LandingPage1 = () => {
       <div className='w-full font-neue min-h-[calc(100vh-3.8rem)] px-7 pt-5 bg-zinc-200'>
         <div className="flex flex-col md:flex-row md:justify-between">
           <div className="md:w-3/5">
-            <h3 className='text-lg font-semibold text-zinc-700 mt-10 mb-4'>Hello, Welcome to Codexa.  </h3>
-            <h1 className='text-5xl md:text-7xl text-zinc-950 font-semibold'>
-              Showcase your work,<br/> connect with others,<br/> stay inspired<br/> by{' '}
-              <span className='text-zinc-500'>real-world projects.</span>
+            <h3 className='text-lg  font-semibold text-zinc-700 mt-10 mb-4'>Hello, Welcome to Codexa.  </h3>
+            <h1 className='text-5xl  md:text-7xl text-zinc-950 font-semibold'>
+              Showcase your work,<br/> connect with others,<br/> stay inspired{' '}
+              <span className='text-zinc-500 text-5xl'>by{' '}real-world projects.</span>
             </h1>
             <div className='mt-12'>
               <Link className='' to="/signup">
@@ -230,7 +230,7 @@ const LandingPage1 = () => {
         
         {/* Social proof section */}
         <div className="py-8 mb-12 text-center">
-          <p className="text-zinc-600 mb-4">Trusted by developers from</p>
+          <p className="text-zinc-600 mb-4">Will be trusted by developers from</p>
           <div className="flex flex-wrap justify-center gap-6 md:gap-12">
             <div className="text-zinc-400 font-semibold">Google</div>
             <div className="text-zinc-400 font-semibold">Microsoft</div>

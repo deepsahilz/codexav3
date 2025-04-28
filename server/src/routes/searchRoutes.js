@@ -144,6 +144,41 @@ router.get("/project", verifyToken, async (req, res) => {
   }
 });
 
+// search counts
+router.get("/counts", verifyToken, async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.status(400).json({ message: "query is required" });
+
+    const [usersCount, projectsCount] = await Promise.all([
+      User.countDocuments({
+        $or: [
+          { fullName: { $regex: `\\b${query}`, $options: "i" } },
+          { username: { $regex: `^${query}`, $options: "i" } }
+        ]
+      }),
+      Project.countDocuments({
+        isHidden: false,
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { _id: { 
+            $in: await ProjectTag.find({
+              tagId: {
+                $in: await Tag.find({ name: { $regex: query, $options: "i" } }).distinct("_id")
+              }
+            }).distinct("projectId")
+          }}
+        ]
+      })
+    ]);
+
+    res.json({ usersCount, projectsCount });
+  } catch (error) {
+    console.error("Error fetching search counts:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 
 
 export default router;

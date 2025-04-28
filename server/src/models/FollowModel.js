@@ -9,4 +9,7 @@ const followSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Follow", followSchema);
+// Check if the model already exists to prevent overwriting it
+const Follow = mongoose.models.Follow || mongoose.model("Follow", followSchema);
+
+export default Follow;

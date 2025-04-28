@@ -4,58 +4,7 @@ import CommentCard from './CommentCard';
 import CommentBar from './CommentBar';
 
 const CommentSection = ({projectId}) => {
-  const dummyComments = [
-    {
-      "_id": "660d9a1a5f8b2c001f5e4a01",
-      "parentId": null,
-      "userId": "660d9a1b5f8b2c001f5e4a02",
-      "username": "dev_master",
-      "avatarUrl": "https://example.com/avatars/dev_master.jpg",
-      "projectId": "660d9a1c5f8b2c001f5e4a03",
-      "content": "This is an amazing project!",
-      "gifUrl": null,
-      "createdAt": "2025-03-30T12:00:00.000Z",
-      "updatedAt": "2025-03-30T12:00:00.000Z"
-    },
-    {
-      "_id": "660d9a205f8b2c001f5e4a06",
-      "parentId": null,
-      "userId": "660d9a215f8b2c001f5e4a07",
-      "username": "frontend_wiz",
-      "avatarUrl": "https://example.com/avatars/frontend_wiz.jpg",
-      "projectId": "660d9a1c5f8b2c001f5e4a03",
-      "content": "How did you achieve this effect?",
-      "gifUrl": null,
-      "createdAt": "2025-03-30T12:10:00.000Z",
-      "updatedAt": "2025-03-30T12:10:00.000Z"
-    },
-    
-    {
-      "_id": "660d9a245f8b2c001f5e4a10",
-      "parentId": null,
-      "userId": "660d9a255f8b2c001f5e4a11",
-      "username": "bug_hunter",
-      "avatarUrl": "https://example.com/avatars/bug_hunter.jpg",
-      "projectId": "660d9a1c5f8b2c001f5e4a03",
-      "content": "I found a small bug when resizing the window.",
-      "gifUrl": null,
-      "createdAt": "2025-03-30T12:20:00.000Z",
-      "updatedAt": "2025-03-30T12:20:00.000Z"
-    },
-   
-    {
-      "_id": "660d9a325f8b2c001f5e4a18",
-      "parentId": null,
-      "userId": "660d9a335f8b2c001f5e4a19",
-      "username": "data_nerd",
-      "avatarUrl": "https://example.com/avatars/data_nerd.jpg",
-      "projectId": "660d9a1c5f8b2c001f5e4a03",
-      "content": "What database are you using for this?",
-      "gifUrl": null,
-      "createdAt": "2025-03-30T12:40:00.000Z",
-      "updatedAt": "2025-03-30T12:40:00.000Z"
-    }
-  ]
+  
 
   const [loading,setLoading]=useState(true);
   const [comments,setComments] = useState([]);
@@ -66,6 +15,7 @@ const CommentSection = ({projectId}) => {
     const fetchParentComments = async (projectId) => {
         try {
             const { data } = await axiosInstance.get(`/api/project/${projectId}/comment`);
+            console.log(data);
             setComments(data);
         } catch (error) {
             console.log(error);

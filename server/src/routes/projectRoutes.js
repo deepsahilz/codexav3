@@ -1,5 +1,5 @@
 import express from "express";
-import { createProject, getProject,getAllProjects, updateProject,saveProject,unsaveProject, deleteProject,likeProject,unlikeProject, addComment, getParentComments } from "../controllers/projectControllers.js";
+import { createProject, getProject,getAllProjects, updateProject,saveProject,unsaveProject, deleteProject,likeProject,unlikeProject, addComment, getParentComments, getFollowedProjects } from "../controllers/projectControllers.js";
 import verifyToken from "../middlewares/authMiddleware.js";
 import projectFilesUpload from "../middlewares/projectFilesUpload.js";
 const router = express.Router();
@@ -7,6 +7,7 @@ const router = express.Router();
 
 //✔️ GET----> /api/project
 router.get("/",verifyToken,getAllProjects); 
+router.get("/followed",verifyToken,getFollowedProjects); 
 
 //✔️ POST---> /api/project
 router.post("/", verifyToken,projectFilesUpload,createProject);

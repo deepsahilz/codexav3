@@ -5,11 +5,12 @@ import axiosInstance from '../utils/axiosInstance';
 import { useChatContext } from '../context/ChatContext';
 import { useUserContext } from '../context/UserContextProvider';
 import { messageTime, formatDate } from '../utils/utilityFunctions';
+import LoadingSpinner from './LoadingSpinner';
 
 const ChatBox = () => {
 
   const { user } = useUserContext();
-  const { activeChat, setActiveChat, chats, setChats, messages, setMessages } = useChatContext();
+  const { activeChat, setChats, messages, setMessages } = useChatContext();
 
   const [isLoading, setIsLoading] = useState(true);
   const messagesEndRef = useRef(null);
@@ -123,7 +124,7 @@ const ChatBox = () => {
           <p>Send a message to start the conversation</p>
         </div>
       ) : isLoading ? (
-        <div>Loading messages...</div>
+        <LoadingSpinner />
       ) : (
         <div className="flex-1 p-4 overflow-y-auto bg-gray-50 mb-[4.2rem]">
           {messages.length > 0 &&
