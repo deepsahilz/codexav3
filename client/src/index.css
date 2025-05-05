@@ -18,6 +18,10 @@
 @tailwind utilities;
 @tailwind base;
 @tailwind components;
+
+html {
+    scroll-behavior: smooth;
+  }
 /* @import "tailwindcss"; */
 
 /* body.loading {

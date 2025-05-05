@@ -20,7 +20,7 @@ const ProjectGrid = ({ projects, className,columns,isLoading }) => {
     </div>
   )
   return (
-    <div className={`grid  md:grid-cols-2 min-h-[100vh]  2xl:grid-cols-4 gap-x-5 gap-y-10 ${className || ''} ${columns==2?"lg:grid-cols-2 auto-rows-[25rem]":"lg:grid-cols-3 auto-rows-[19rem]"} `}>
+    <div className={`grid  md:grid-cols-2 min-h-[100vh]  2xl:grid-cols-4 gap-x-5 gap-y-10 ${className || ''} ${columns==2?"lg:grid-cols-2 auto-rows-[25rem]":"lg:grid-cols-3 auto-rows-[22rem]"} `}>
       {
         projects.map((project, i) => (
             <ProjectCard project={project} key={i} />
